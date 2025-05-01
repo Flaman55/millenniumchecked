@@ -43,7 +43,7 @@
   </style>
 </head>
 <body>
-  <h2>🧲 test Harmonic Interference Operator – RH Analysis</h2>
+  <h2>🧲 Harmonic Interference Operator – RH Analysis</h2>
   <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
   <div>
     <label>Number of primes: <input type="number" id="num_primes" value="100"></label>
@@ -55,7 +55,6 @@
 
   <canvas id="plot" width="800" height="400"></canvas>
 
-  <!-- Export Buttons Section (initially hidden, displayed after successful run) -->
   <div id="export-section" style="display:none; margin-top: 1em;">
     <h3>📅 Export Results</h3>
     <button onclick="downloadCSV()">📊 Download CSV</button>
@@ -112,7 +111,7 @@ csv_data = """sigma,avg_minima,deepest_minima,interpretation\n"""
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label=f'σ = {sigma}')
+    ax.plot(t, signal, label='σ = {}'.format(sigma))
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
@@ -121,10 +120,10 @@ for sigma in sigmas:
         "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
         "Constructive accumulation dominates."
     )
-    output += f"σ = {sigma}\n"
-    output += f"  • Avg minima: {avg_min:.4f}\n" if avg_min else "  • No minima detected\n"
-    output += f"  • Interpretation: {interp}\n\n"
-    csv_data += f"{sigma},{avg_min:.4f},{min_val:.4f},{interp}\n"
+    output += 'σ = {}\n'.format(sigma)
+    output += '  • Avg minima: {:.4f}\n'.format(avg_min) if avg_min else '  • No minima detected\n'
+    output += '  • Interpretation: {}\n\n'.format(interp)
+    csv_data += '{},{:.4f},{:.4f},{}\n'.format(sigma, avg_min, min_val, interp)
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
