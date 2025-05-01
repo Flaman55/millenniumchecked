@@ -52,11 +52,14 @@
     <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4"></label>
     <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6"></label>
     <button onclick="runPython()">Generate Plot</button>
-    <button onclick="downloadCSV()">Download CSV</button>
-    <button onclick="downloadPNG()">Download PNG</button>
-    <button onclick="downloadPDF()">Download PDF</button>
   </div>
   <canvas id="plot" width="800" height="400"></canvas>
+  <div style="margin-top: 1em;">
+    <h3>📥 Export Results</h3>
+    <button onclick="downloadCSV()">📊 Download CSV</button>
+    <button onclick="downloadPNG()">🖼️ Download PNG</button>
+    <button onclick="downloadPDF()">📄 Download PDF</button>
+  </div>
   <div id="output-text">Ready.</div>
 
   <script>
