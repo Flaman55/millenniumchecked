@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Harmonic Interference – Riemann</title>
   <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       background-color: #111;
@@ -11,9 +13,6 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 1em;
-    }
-    h2 {
-      margin-bottom: 0.2em;
     }
     label, input, button {
       margin: 0.5em;
@@ -48,17 +47,22 @@
   <h2>🧮 Harmonic Interference Operator – RH Analysis</h2>
   <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
   <div>
-    <label>Number of primes: <input type="number" id="num_primes" value="100" min="1" max="1000"></label>
-    <label>Max t value: <input type="number" id="t_max" value="1000" min="10" max="10000"></label><br>
+    <label>Number of primes: <input type="number" id="num_primes" value="100"></label>
+    <label>Max t value: <input type="number" id="t_max" value="1000"></label><br>
     <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4"></label>
     <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6"></label>
     <button onclick="runPython()">Generate Plot</button>
+    <button onclick="downloadCSV()">Download CSV</button>
+    <button onclick="downloadPNG()">Download PNG</button>
+    <button onclick="downloadPDF()">Download PDF</button>
   </div>
   <canvas id="plot" width="800" height="400"></canvas>
   <div id="output-text">Ready.</div>
 
   <script>
     let pyodideReady = false;
+    let lastCSV = "";
+    let lastImageURL = "";
 
     async function loadPyodideAndPackages() {
       window.pyodide = await loadPyodide();
@@ -86,47 +90,59 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sympy import primerange
 
-sigmas = [0.5, float(${sigmaA}), float(${sigmaB})]
-num_primes = int(${numPrimes})
-t_max = int(${tMax})
+sigmas = [0.5, float({sigmaA}), float({sigmaB})]
+num_primes = int({numPrimes})
+t_max = int({tMax})
 t_points = 5000
 primes = list(primerange(2, 10000))[:num_primes]
 t = np.linspace(0, t_max, t_points)
 
 fig, ax = plt.subplots()
 output = ""
+csv_data = "sigma,avg_minima,deepest_minima,interpretation\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
     ax.plot(t, signal, label=f'σ = {sigma}')
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
+    min_val = np.min(minima) if minima else None
     interp = (
         "Strong destructive interference (critical line)." if abs(sigma - 0.5) < 0.01 else
-        "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
-        "Constructive dominance – low frequency accumulation."
+        "Partial interference – amplitudes not fully cancel." if sigma < 0.5 else
+        "Constructive accumulation dominates."
     )
-    output += f"σ = {sigma}\\n"
-    output += f"  • Avg minima: {avg_min:.4f}\\n" if avg_min else "  • No minima detected\\n"
-    output += f"  • Interpretation: {interp}\\n\\n"
+    output += f"σ = {sigma}\n"
+    output += f"  • Avg minima: {avg_min:.4f}\n" if avg_min else "  • No minima detected\n"
+    output += f"  • Interpretation: {interp}\n\n"
+    csv_data += f"{sigma},{avg_min:.4f},{min_val:.4f},{interp}\n"
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
-ax.set_title("Harmonic Signal Interference", color="white")
+ax.set_title("Harmonic Interference", color="white")
 ax.tick_params(colors='white')
 ax.legend()
+ax.text(0.98, 0.02, "Harmonic Operator – RH Context", color='white',
+        fontsize=6, ha='right', va='bottom', transform=ax.transAxes)
 plt.tight_layout()
 plt.savefig("plot.png")
-output
+csv_data + "###" + output
       `;
 
       try {
-        const result = await pyodide.runPythonAsync(code);
-        document.getElementById("output-text").textContent = result;
+        const result = await pyodide.runPythonAsync(code
+          .replace(/{sigmaA}/g, sigmaA)
+          .replace(/{sigmaB}/g, sigmaB)
+          .replace(/{numPrimes}/g, numPrimes)
+          .replace(/{tMax}/g, tMax)
+        );
+        const [csv, outputText] = result.split("###");
+        lastCSV = csv;
+        document.getElementById("output-text").textContent = outputText;
 
         const bytes = await pyodide.FS.readFile("plot.png");
         const blob = new Blob([bytes], { type: "image/png" });
-        const url = URL.createObjectURL(blob);
+        lastImageURL = URL.createObjectURL(blob);
         const canvas = document.getElementById("plot");
         const ctx = canvas.getContext("2d");
         const img = new Image();
@@ -135,11 +151,54 @@ output
           canvas.height = img.height;
           ctx.drawImage(img, 0, 0);
         };
-        img.src = url;
+        img.src = lastImageURL;
       } catch (err) {
-        document.getElementById("output-text").textContent = "Error during computation:\\n" + err;
+        document.getElementById("output-text").textContent = "Error during computation:\n" + err;
         console.error(err);
       }
+    }
+
+    function downloadCSV() {
+      const blob = new Blob([lastCSV], { type: "text/csv" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "interference_data.csv";
+      link.click();
+    }
+
+    function downloadPNG() {
+      const link = document.createElement("a");
+      link.href = lastImageURL;
+      link.download = "interference_plot.png";
+      link.click();
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(12);
+      doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 10);
+      doc.text("This output represents harmonic interference behavior with respect to the critical line ℜ(s) = 0.5.", 10, 18);
+
+      const img = new Image();
+      img.src = lastImageURL;
+      await img.decode();
+      doc.addImage(img, "PNG", 10, 25, 180, 60);
+
+      const rows = lastCSV.trim().split("\n").slice(1);
+      let y = 90;
+      rows.forEach(row => {
+        doc.text(row, 10, y);
+        y += 7;
+      });
+
+      const diag = new Image();
+      diag.src = "https://flaman55.github.io/millenniumchecked/assets/proofs/A_simple_2D_digital_diagram_illustrates_interferen.png";
+      await diag.decode();
+      doc.addImage(diag, "PNG", 10, y + 10, 180, 50);
+
+      doc.save("interference_report.pdf");
     }
   </script>
 </body>
