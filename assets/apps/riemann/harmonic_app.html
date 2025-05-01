@@ -43,7 +43,7 @@
   </style>
 </head>
 <body>
-  <h2>🧲 Harmonic Interference Operator – RH Analysis</h2>
+  <h2>🧲 test Harmonic Interference Operator – RH Analysis</h2>
   <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
   <div>
     <label>Number of primes: <input type="number" id="num_primes" value="100"></label>
@@ -88,17 +88,20 @@
       const sigmaA = document.getElementById("sigma_a").value;
       const sigmaB = document.getElementById("sigma_b").value;
 
-      document.getElementById("output-text").textContent = "Computing, please wait...";
-      document.getElementById("export-section").style.display = "none";
+      const outputText = document.getElementById("output-text");
+      const exportSection = document.getElementById("export-section");
+
+      outputText.textContent = "Computing, please wait...";
+      exportSection.style.display = "none";
 
       const code = `
 import matplotlib.pyplot as plt
 import numpy as np
 from sympy import primerange
 
-sigmas = [0.5, float({sigmaA}), float({sigmaB})]
-num_primes = int({numPrimes})
-t_max = int({tMax})
+sigmas = [0.5, float(${sigmaA}), float(${sigmaB})]
+num_primes = int(${numPrimes})
+t_max = int(${tMax})
 t_points = 5000
 primes = list(primerange(2, 10000))[:num_primes]
 t = np.linspace(0, t_max, t_points)
@@ -109,7 +112,7 @@ csv_data = """sigma,avg_minima,deepest_minima,interpretation\n"""
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label=f'σ = {{sigma}}')
+    ax.plot(t, signal, label=f'σ = {sigma}')
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
@@ -118,10 +121,10 @@ for sigma in sigmas:
         "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
         "Constructive accumulation dominates."
     )
-    output += f"σ = {{sigma}}\n"
-    output += f"  • Avg minima: {{avg_min:.4f}}\n" if avg_min else "  • No minima detected\n"
-    output += f"  • Interpretation: {{interp}}\n\n"
-    csv_data += f"{{sigma}},{{avg_min:.4f}},{{min_val:.4f}},{{interp}}\n"
+    output += f"σ = {sigma}\n"
+    output += f"  • Avg minima: {avg_min:.4f}\n" if avg_min else "  • No minima detected\n"
+    output += f"  • Interpretation: {interp}\n\n"
+    csv_data += f"{sigma},{avg_min:.4f},{min_val:.4f},{interp}\n"
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
@@ -137,12 +140,12 @@ csv_data + "###" + output
 
       try {
         const result = await pyodide.runPythonAsync(code);
-        const [csv, outputText] = result.split("###");
+        const [csv, outputTextResult] = result.split("###");
         lastCSV = csv;
-        document.getElementById("output-text").textContent = outputText;
+        outputText.textContent = outputTextResult;
 
         const bytes = await pyodide.FS.readFile("plot.png");
-        const blob = new Blob([bytes], {{ type: "image/png" }});
+        const blob = new Blob([bytes], { type: "image/png" });
         lastImageURL = URL.createObjectURL(blob);
         const canvas = document.getElementById("plot");
         const ctx = canvas.getContext("2d");
@@ -153,15 +156,15 @@ csv_data + "###" + output
           ctx.drawImage(img, 0, 0);
         };
         img.src = lastImageURL;
-        document.getElementById("export-section").style.display = "block";
+        exportSection.style.display = "block";
       } catch (err) {
-        document.getElementById("output-text").textContent = "Error during computation:\n" + err;
+        outputText.textContent = "Error during computation:\n" + err;
         console.error(err);
       }
     }
 
     function downloadCSV() {
-      const blob = new Blob([lastCSV], {{ type: "text/csv" }});
+      const blob = new Blob([lastCSV], { type: "text/csv" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
       link.download = "interference_data.csv";
@@ -176,7 +179,7 @@ csv_data + "###" + output
     }
 
     async function downloadPDF() {
-      const {{ jsPDF }} = window.jspdf;
+      const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
       doc.setFontSize(12);
@@ -190,10 +193,10 @@ csv_data + "###" + output
 
       const rows = lastCSV.trim().split("\n").slice(1);
       let y = 90;
-      rows.forEach(row => {{
+      rows.forEach(row => {
         doc.text(row, 10, y);
         y += 7;
-      }});
+      });
 
       doc.save("interference_report.pdf");
     }
