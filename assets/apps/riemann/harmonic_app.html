@@ -55,9 +55,9 @@
     <button onclick="downloadCSV()">Download CSV</button>
     <button onclick="downloadPNG()">Download PNG</button>
     <button onclick="downloadPDF()">Download PDF</button>
-  </div>
+  </div></div>
   <canvas id="plot" width="800" height="400"></canvas>
-  <div id="output-text">Ready.</div>
+  <div id="output-text">Ready.</div></div>
 
   <script>
     let pyodideReady = false;
@@ -99,7 +99,7 @@ t = np.linspace(0, t_max, t_points)
 
 fig, ax = plt.subplots()
 output = ""
-csv_data = "sigma,avg_minima,deepest_minima,interpretation\n"\n"
+csv_data = """sigma,avg_minima,deepest_minima,interpretation\n"""
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
@@ -152,6 +152,7 @@ csv_data + "###" + output
           ctx.drawImage(img, 0, 0);
         };
         img.src = lastImageURL;
+        document.getElementById("export-section").style.display = "block";
       } catch (err) {
         document.getElementById("output-text").textContent = "Error during computation:\n" + err;
         console.error(err);
@@ -183,6 +184,7 @@ csv_data + "###" + output
 
       const img = new Image();
       img.src = lastImageURL;
+        document.getElementById("export-section").style.display = "block";
       await img.decode();
       doc.addImage(img, "PNG", 10, 25, 180, 60);
 
