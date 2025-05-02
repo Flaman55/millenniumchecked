@@ -50,7 +50,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>🪢 Harmonic Interference Operator – RH Analysis</h2>
+    <h2>🦢 Harmonic Interference Operator – RH Analysis</h2>
     <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
 
     <label>Image Quality (DPI):
@@ -113,8 +113,8 @@
 
       const numPrimes = document.getElementById("num_primes").value;
       const tMax = document.getElementById("t_max").value;
-      const sigmaA = document.getElementById("sigma_a").value;
-      const sigmaB = document.getElementById("sigma_b").value;
+      const sigmaA = parseFloat(document.getElementById("sigma_a").value);
+      const sigmaB = parseFloat(document.getElementById("sigma_b").value);
       const dpi = document.getElementById("dpiSlider").value;
 
       const outputText = document.getElementById("output-text");
@@ -128,7 +128,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sympy import primerange
 
-sigmas = [0.5, float(${sigmaA}), float(${sigmaB})]
+sigma_a = ${sigmaA}
+sigma_b = ${sigmaB}
+base_sigma = 0.5
+sigmas = list(dict.fromkeys(
+    [base_sigma] + 
+    ([] if sigma_a == base_sigma else [sigma_a]) + 
+    ([] if sigma_b == base_sigma or sigma_b == sigma_a else [sigma_b])
+))
+
 num_primes = int(${numPrimes})
 t_max = int(${tMax})
 t_points = 5000
@@ -137,11 +145,11 @@ t = np.linspace(0, t_max, t_points)
 
 fig, ax = plt.subplots()
 output = ""
-csv_data = "sigma,avg_minima,deepest_minima,interpretation\\n"
+csv_data = "sigma,avg_minima,deepest_minima,interpretation\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label='σ = {}'.format(sigma))
+    ax.plot(t, signal, label='\u03c3 = {}'.format(sigma))
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
@@ -150,10 +158,10 @@ for sigma in sigmas:
         "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
         "Constructive accumulation dominates."
     )
-    output += f"σ = {sigma}\\n"
-    output += "  • Avg minima: {:.4f}\\n".format(avg_min) if avg_min else "  • No minima detected\\n"
-    output += "  • Interpretation: {}\\n\\n".format(interp)
-    csv_data += "{},{:.4f},{:.4f},{}\\n".format(sigma, avg_min, min_val, interp)
+    output += f"σ = {sigma}\n"
+    output += "  • Avg minima: {:.4f}\n".format(avg_min) if avg_min else "  • No minima detected\n"
+    output += "  • Interpretation: {}\n\n".format(interp)
+    csv_data += "{},{:.4f},{:.4f},{}\n".format(sigma, avg_min, min_val, interp)
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
@@ -186,51 +194,64 @@ csv_data + "###" + output
           canvas.height = img.height * scale;
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
-
         img.src = lastImageURL;
-        exportSection.style.display = "block";
+        document.getElementById("export-section").style.display = "block";
       } catch (err) {
         outputText.textContent = "Error during computation:\n" + err;
         console.error(err);
       }
     }
 
+    function generateFileName(ext) {
+      const sigmaA = document.getElementById("sigma_a").value;
+      const sigmaB = document.getElementById("sigma_b").value;
+      const numPrimes = document.getElementById("num_primes").value;
+      const tMax = document.getElementById("t_max").value;
+      return `interference_${numPrimes}p_t${tMax}_a${sigmaA}_b${sigmaB}.${ext}`;
+    }
+
     function downloadCSV() {
       const blob = new Blob([lastCSV], { type: "text/csv" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "interference_data.csv";
+      link.download = generateFileName("csv");
       link.click();
     }
 
     function downloadPNG() {
       const link = document.createElement("a");
       link.href = lastImageURL;
-      link.download = "interference_plot.png";
+      link.download = generateFileName("png");
       link.click();
     }
 
     async function downloadPDF() {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const doc = new jsPDF({ orientation: "landscape" });
 
-      doc.setFontSize(12);
-      doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 10);
-      doc.text("This output represents harmonic interference behavior with respect to the critical line ℜ(s) = 0.5.", 10, 18);
+      doc.setFontSize(14);
+      doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 15);
+      doc.setFontSize(10);
+      doc.text("Behavior of prime harmonic interference near the critical line ℜ(s) = 0.5.", 10, 22);
 
       const img = new Image();
       img.src = lastImageURL;
       await img.decode();
-      doc.addImage(img, "PNG", 10, 25, 180, 60);
+      doc.addImage(img, "PNG", 10, 30, 270, 80);
 
       const rows = lastCSV.trim().split("\n").slice(1);
-      let y = 90;
+      let y = 115;
+      doc.setFontSize(9);
       rows.forEach(row => {
+        if (y > 190) {
+          doc.addPage("landscape");
+          y = 15;
+        }
         doc.text(row, 10, y);
-        y += 7;
+        y += 6;
       });
 
-      doc.save("interference_report.pdf");
+      doc.save(generateFileName("pdf"));
     }
   </script>
 </body>
