@@ -66,7 +66,7 @@
       <button onclick="runPython()">Generate Plot</button>
     </div>
 
-    <canvas id="plot" height="400"></canvas>
+    <canvas id="plot"></canvas>
 
     <div id="export-section" style="display:none; margin-top: 1em;">
       <h3>🗕️ Export Results</h3>
@@ -82,6 +82,21 @@
     let pyodideReady = false;
     let lastCSV = "";
     let lastImageURL = "";
+
+    window.onload = () => {
+      // Load static default image into canvas
+      const canvas = document.getElementById("plot");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = function () {
+        const containerWidth = document.querySelector(".container").clientWidth;
+        const scale = containerWidth / img.width;
+        canvas.width = containerWidth;
+        canvas.height = img.height * scale;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = "assets/apps/riemann/default_plot.png";
+    };
 
     async function loadPyodideAndPackages() {
       window.pyodide = await loadPyodide();
@@ -125,7 +140,7 @@ csv_data = "sigma,avg_minima,deepest_minima,interpretation\\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label='\u03c3 = {}'.format(sigma))
+    ax.plot(t, signal, label='σ = {}'.format(sigma))
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
