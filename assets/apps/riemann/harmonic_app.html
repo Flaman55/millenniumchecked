@@ -128,28 +128,37 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sympy import primerange
 
-sigma_a = ${sigmaA}
-sigma_b = ${sigmaB}
+sigma_a = float(${sigmaA})
+sigma_b = float(${sigmaB})
 base_sigma = 0.5
+
 sigmas = list(dict.fromkeys(
-    [base_sigma] + 
-    ([] if sigma_a == base_sigma else [sigma_a]) + 
+    [base_sigma] +
+    ([] if sigma_a == base_sigma else [sigma_a]) +
     ([] if sigma_b == base_sigma or sigma_b == sigma_a else [sigma_b])
 ))
 
-num_primes = int(${numPrimes})
-t_max = int(${tMax})
-t_points = 5000
-primes = list(primerange(2, 10000))[:num_primes]
-t = np.linspace(0, t_max, t_points)
+labels = {}
+for s in sigmas:
+    if s == base_sigma:
+        labels[s] = f"σ = {s} (base)"
+    elif s == sigma_a:
+        labels[s] = f"σ = {s} (A)"
+    elif s == sigma_b:
+        labels[s] = f"σ = {s} (B)"
+    else:
+        labels[s] = f"σ = {s}"
 
 fig, ax = plt.subplots()
 output = ""
 csv_data = "sigma,avg_minima,deepest_minima,interpretation\\n"
 
+primes = list(primerange(2, 10000))[:int(${numPrimes})]
+t = np.linspace(0, int(${tMax}), 5000)
+
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label='\u03c3 = {}'.format(sigma))
+    ax.plot(t, signal, label=labels[sigma])
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
