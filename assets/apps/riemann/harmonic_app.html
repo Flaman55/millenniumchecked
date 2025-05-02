@@ -226,33 +226,46 @@ csv_data + "###" + output
     }
 
     async function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: "landscape" });
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
-      doc.setFontSize(14);
-      doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 15);
-      doc.setFontSize(10);
-      doc.text("Behavior of prime harmonic interference near the critical line ℜ(s) = 0.5.", 10, 22);
+  doc.setFontSize(14);
+  doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 15);
+  doc.setFontSize(10);
+  doc.text("Behavior of prime harmonic interference near the critical line ℜ(s) = 0.5.", 10, 22);
 
-      const img = new Image();
-      img.src = lastImageURL;
-      await img.decode();
-      doc.addImage(img, "PNG", 10, 30, 270, 80);
+  const img = new Image();
+  img.src = lastImageURL;
+  await img.decode();
 
-      const rows = lastCSV.trim().split("\n").slice(1);
-      let y = 115;
-      doc.setFontSize(9);
-      rows.forEach(row => {
-        if (y > 190) {
-          doc.addPage("landscape");
-          y = 15;
-        }
-        doc.text(row, 10, y);
-        y += 6;
-      });
+  // Szerokość dostępna w dokumencie
+  const marginX = 10;
+  const maxWidth = 270; // A4 landscape usable width (297mm - 2*margin)
+  
+  // Oblicz proporcje oryginalnego obrazka
+  const aspectRatio = img.height / img.width;
+  const scaledHeight = maxWidth * aspectRatio;
 
-      doc.save(generateFileName("pdf"));
+  // Dodaj obrazek z zachowaniem proporcji
+  doc.addImage(img, "PNG", marginX, 30, maxWidth, scaledHeight);
+
+  // Dodaj dane tekstowe poniżej wykresu
+  const startY = 30 + scaledHeight + 10;
+  let y = startY;
+  const rows = lastCSV.trim().split("\n").slice(1);
+
+  doc.setFontSize(9);
+  rows.forEach(row => {
+    if (y > 190) {
+      doc.addPage("landscape");
+      y = 15;
     }
+    doc.text(row, 10, y);
+    y += 6;
+  });
+
+  doc.save("interference_report.pdf");
+}
   </script>
 </body>
 </html>
