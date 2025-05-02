@@ -29,7 +29,7 @@ h1 {
 
 main {
   padding: 2rem 1rem;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -65,4 +65,23 @@ footer {
   font-size: 0.9rem;
   border-top: 1px solid #333;
   color: #888;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  main {
+    padding: 1.5rem 1rem;
+  }
+
+  .logo {
+    height: 60px;
+  }
+
+  section {
+    margin-bottom: 1.5rem;
+  }
 }
