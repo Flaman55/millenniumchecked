@@ -145,7 +145,7 @@ t = np.linspace(0, t_max, t_points)
 
 fig, ax = plt.subplots()
 output = ""
-csv_data = "sigma,avg_minima,deepest_minima,interpretation\n"
+csv_data = "sigma,avg_minima,deepest_minima,interpretation\\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
@@ -158,10 +158,10 @@ for sigma in sigmas:
         "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
         "Constructive accumulation dominates."
     )
-    output += f"σ = {sigma}\n"
-    output += "  • Avg minima: {:.4f}\n".format(avg_min) if avg_min else "  • No minima detected\n"
-    output += "  • Interpretation: {}\n\n".format(interp)
-    csv_data += "{},{:.4f},{:.4f},{}\n".format(sigma, avg_min, min_val, interp)
+    output += f"σ = {sigma}\\n"
+    output += "  • Avg minima: {:.4f}\\n".format(avg_min) if avg_min else "  • No minima detected\\n"
+    output += "  • Interpretation: {}\\n\\n".format(interp)
+    csv_data += "{},{:.4f},{:.4f},{}\\n".format(sigma, avg_min, min_val, interp)
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
