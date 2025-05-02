@@ -158,7 +158,12 @@ t = np.linspace(0, int(${tMax}), 5000)
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label=labels[sigma])
+    style = {
+        "linewidth": 2.5 if sigma == base_sigma else 1.5,
+        "linestyle": "--" if sigma == base_sigma else "-",
+        "alpha": 1.0 if sigma == base_sigma else 0.7
+    }
+    ax.plot(t, signal, label=labels[sigma], **style)
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
