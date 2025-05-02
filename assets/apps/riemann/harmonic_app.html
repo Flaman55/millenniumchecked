@@ -13,6 +13,11 @@
       margin: 0;
       padding: 1em;
     }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1em;
+    }
     label, input, button {
       margin: 0.5em;
     }
@@ -43,26 +48,34 @@
   </style>
 </head>
 <body>
-  <h2>🧲 Harmonic Interference Operator – RH Analysis</h2>
-  <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
-  <div>
-    <label>Number of primes: <input type="number" id="num_primes" value="100"></label>
-    <label>Max t value: <input type="number" id="t_max" value="1000"></label><br>
-    <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4"></label>
-    <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6"></label>
-    <button onclick="runPython()">Generate Plot</button>
+  <div class="container">
+    <h2>🧲 Harmonic Interference Operator – RH Analysis</h2>
+    <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
+
+    <label>Interface Width:
+      <input type="range" id="widthSlider" min="800" max="1800" step="100" value="1400"
+             oninput="document.querySelector('.container').style.maxWidth = this.value + 'px';">
+    </label>
+
+    <div>
+      <label>Number of primes: <input type="number" id="num_primes" value="100"></label>
+      <label>Max t value: <input type="number" id="t_max" value="1000"></label><br>
+      <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4"></label>
+      <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6"></label>
+      <button onclick="runPython()">Generate Plot</button>
+    </div>
+
+    <canvas id="plot" width="800" height="400"></canvas>
+
+    <div id="export-section" style="display:none; margin-top: 1em;">
+      <h3>📅 Export Results</h3>
+      <button onclick="downloadCSV()">📊 Download CSV</button>
+      <button onclick="downloadPNG()">🖼️ Download PNG</button>
+      <button onclick="downloadPDF()">📄 Download PDF</button>
+    </div>
+
+    <div id="output-text">Ready.</div>
   </div>
-
-  <canvas id="plot" width="800" height="400"></canvas>
-
-  <div id="export-section" style="display:none; margin-top: 1em;">
-    <h3>📅 Export Results</h3>
-    <button onclick="downloadCSV()">📊 Download CSV</button>
-    <button onclick="downloadPNG()">🖼️ Download PNG</button>
-    <button onclick="downloadPDF()">📄 Download PDF</button>
-  </div>
-
-  <div id="output-text">Ready.</div>
 
   <script>
     let pyodideReady = false;
@@ -107,7 +120,7 @@ t = np.linspace(0, t_max, t_points)
 
 fig, ax = plt.subplots()
 output = ""
-csv_data = """sigma,avg_minima,deepest_minima,interpretation\n"""
+csv_data = "sigma,avg_minima,deepest_minima,interpretation\\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
