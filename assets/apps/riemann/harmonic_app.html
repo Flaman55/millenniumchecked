@@ -50,12 +50,13 @@
 </head>
 <body>
   <div class="container">
-    <h2>🮢 Harmonic Interference Operator – RH Analysis</h2>
+    <h2>🪢 Harmonic Interference Operator – RH Analysis</h2>
     <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
 
-    <label>Interface Width:
-      <input type="range" id="widthSlider" min="800" max="1800" step="100" value="1400"
-             oninput="document.querySelector('.container').style.maxWidth = this.value + 'px';">
+    <label>Image Quality (DPI):
+      <input type="range" id="dpiSlider" min="100" max="400" step="50" value="200"
+             oninput="document.getElementById('dpiLabel').textContent = this.value">
+      <span id="dpiLabel">200</span>
     </label>
 
     <div>
@@ -84,7 +85,6 @@
     let lastImageURL = "";
 
     window.onload = () => {
-      // Load static default image into canvas
       const canvas = document.getElementById("plot");
       const ctx = canvas.getContext("2d");
       const img = new Image();
@@ -115,6 +115,7 @@
       const tMax = document.getElementById("t_max").value;
       const sigmaA = document.getElementById("sigma_a").value;
       const sigmaB = document.getElementById("sigma_b").value;
+      const dpi = document.getElementById("dpiSlider").value;
 
       const outputText = document.getElementById("output-text");
       const exportSection = document.getElementById("export-section");
@@ -136,7 +137,7 @@ t = np.linspace(0, t_max, t_points)
 
 fig, ax = plt.subplots()
 output = ""
-csv_data = "sigma,avg_minima,deepest_minima,interpretation\\n"
+csv_data = "sigma,avg_minima,deepest_minima,interpretation\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
@@ -149,10 +150,10 @@ for sigma in sigmas:
         "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
         "Constructive accumulation dominates."
     )
-    output += f"σ = {sigma}\\n"
-    output += "  • Avg minima: {:.4f}\\n".format(avg_min) if avg_min else "  • No minima detected\\n"
-    output += "  • Interpretation: {}\\n\\n".format(interp)
-    csv_data += "{},{:.4f},{:.4f},{}\\n".format(sigma, avg_min, min_val, interp)
+    output += f"σ = {sigma}\n"
+    output += "  • Avg minima: {:.4f}\n".format(avg_min) if avg_min else "  • No minima detected\n"
+    output += "  • Interpretation: {}\n\n".format(interp)
+    csv_data += "{},{:.4f},{:.4f},{}\n".format(sigma, avg_min, min_val, interp)
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
@@ -162,7 +163,7 @@ ax.legend()
 ax.text(0.98, 0.02, "Harmonic Operator – RH Context (Flamandzki Artur)", color='white',
         fontsize=6, ha='right', va='bottom', transform=ax.transAxes)
 plt.tight_layout()
-plt.savefig("plot.png", dpi=300)
+plt.savefig("plot.png", dpi=int(${dpi}))
 csv_data + "###" + output
       `;
 
