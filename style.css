@@ -67,6 +67,12 @@ footer {
   color: #888;
 }
 
+.logo-link img {
+  height: 60px;
+  margin-bottom: 0.5rem;
+  vertical-align: middle;
+}
+
 /* Responsive layout */
 @media (max-width: 768px) {
   h1 {
