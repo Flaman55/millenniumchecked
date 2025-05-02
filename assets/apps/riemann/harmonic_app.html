@@ -193,33 +193,26 @@ csv_data + "###" + output
         const result = await pyodide.runPythonAsync(code);
         const [csv, outputTextResult] = result.split("###");
         lastCSV = csv;
-        outputText.innerHTML = `
-          <div style="display: flex; flex-wrap: wrap; gap: 2em; margin-top: 1.5em;">
-            <div style="flex: 2; min-width: 300px;">
-              <h3 style="color: #4ec9b0;">🧠 Interpretation Guide</h3>
-              <p>This explanation supports understanding how amplitude minima are interpreted:</p>
+        outputText.insertAdjacentHTML("beforeend", `
+          <div id="interpretation-reference" style="margin-top: 3em; display: flex; gap: 2em; align-items: flex-start; flex-wrap: wrap;">
+            <div style="flex: 1 1 500px; min-width: 300px;">
+              <h3 style="font-size: 1.1em; margin-bottom: 0.6em;">📘 Interpretation Reference</h3>
+              <p style="margin: 0 0 1em 0;">This explanation supports understanding how amplitude minima are interpreted:</p>
               <p><strong>In this context, amplitude minima serve as a diagnostic tool:</strong></p>
-              <ul style="margin-left: 1em;">
+              <ul style="margin-top: 0.5em; padding-left: 1.2em;">
                 <li>When the signal exhibits deep, regularly spaced minima,<br>
-                  it suggests <strong>destructive interference</strong> among prime-frequency components.</li>
+                    it suggests <strong>destructive interference</strong> among prime-frequency components.</li>
                 <li>When minima are shallow or irregular, it reflects a failure to cancel –<br>
-                  indicating <strong>constructive interference</strong> or non-critical behavior.</li>
+                    indicating <strong>constructive interference</strong> or non-critical behavior.</li>
               </ul>
-        
-              <pre style="white-space: pre-wrap; background: #111; padding: 1em; border: 1px solid #444; border-radius: 4px;">
-        ${outputTextResult.trim()}
-              </pre>
             </div>
-        
-            <div style="flex: 1; min-width: 240px; text-align: center;">
+            <div style="flex: 1 1 300px; min-width: 250px;">
               <img src="A_simple_2D_digital_diagram_illustrates_interferen.png"
                    alt="Destructive vs Constructive Interference Diagram"
-                   style="max-width: 100%; border: 1px solid #555; border-radius: 6px;">
+                   style="width: 100%; max-width: 360px; border: 1px solid #555; border-radius: 4px;">
             </div>
           </div>
-        `;
-
-
+        `);
         
         const bytes = await pyodide.FS.readFile("plot.png");
         const blob = new Blob([bytes], { type: "image/png" });
