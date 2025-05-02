@@ -164,10 +164,13 @@ csv_data + "###" + output
         const ctx = canvas.getContext("2d");
         const img = new Image();
         img.onload = function () {
-          canvas.width = canvas.clientWidth;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
+          const containerWidth = document.querySelector(".container").clientWidth;
+          const scale = containerWidth / img.width;
+          canvas.width = containerWidth;
+          canvas.height = img.height * scale;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
+
         img.src = lastImageURL;
         exportSection.style.display = "block";
       } catch (err) {
