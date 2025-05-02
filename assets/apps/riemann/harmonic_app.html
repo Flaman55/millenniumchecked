@@ -30,10 +30,11 @@
       cursor: pointer;
     }
     canvas {
+      width: 100%;
+      height: auto;
       background-color: black;
       margin-top: 1em;
       display: block;
-      max-width: 120%;
       border: 1px solid #555;
       border-radius: 6px;
     }
@@ -49,7 +50,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>🧲 Harmonic Interference Operator – RH Analysis</h2>
+    <h2>🮢 Harmonic Interference Operator – RH Analysis</h2>
     <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
 
     <label>Interface Width:
@@ -65,10 +66,10 @@
       <button onclick="runPython()">Generate Plot</button>
     </div>
 
-    <canvas id="plot" width="800" height="400"></canvas>
+    <canvas id="plot" height="400"></canvas>
 
     <div id="export-section" style="display:none; margin-top: 1em;">
-      <h3>📅 Export Results</h3>
+      <h3>🗕️ Export Results</h3>
       <button onclick="downloadCSV()">📊 Download CSV</button>
       <button onclick="downloadPNG()">🖼️ Download PNG</button>
       <button onclick="downloadPDF()">📄 Download PDF</button>
@@ -124,7 +125,7 @@ csv_data = "sigma,avg_minima,deepest_minima,interpretation\\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label='σ = {}'.format(sigma))
+    ax.plot(t, signal, label='\u03c3 = {}'.format(sigma))
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
