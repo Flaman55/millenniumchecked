@@ -151,19 +151,14 @@ for s in sigmas:
 
 fig, ax = plt.subplots()
 output = ""
-csv_data = "label,sigma,avg_minima,deepest_minima,interpretation\\n"
+csv_data = "label,sigma,avg_minima,deepest_minima,interpretation\n"
 
 primes = list(primerange(2, 10000))[:int(${numPrimes})]
 t = np.linspace(0, int(${tMax}), 5000)
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    style = {
-        "linewidth": 2.5 if sigma == base_sigma else 1.5,
-        "linestyle": "--" if sigma == base_sigma else "-",
-        "alpha": 1.0 if sigma == base_sigma else 0.7
-    }
-    ax.plot(t, signal, label=labels[sigma], **style)
+    ax.plot(t, signal, label=labels[sigma])
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
@@ -172,10 +167,10 @@ for sigma in sigmas:
         "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
         "Constructive accumulation dominates."
     )
-    output += f"{labels[sigma]}\\n"
-    output += "  • Avg minima: {:.4f}\\n".format(avg_min) if avg_min else "  • No minima detected\\n"
-    output += f"  • Interpretation: {interp}\\n\\n"
-    csv_data += f"{labels[sigma]},{sigma:.4f},{min_val:.4f},{interp}\\n"
+    output += f"{labels[sigma]}\n"
+    output += "  • Avg minima: {:.4f}\n".format(avg_min) if avg_min else "  • No minima detected\n"
+    output += f"  • Interpretation: {interp}\n\n"
+    csv_data += f"{labels[sigma]},{sigma:.4f},{min_val:.4f},{interp}\n"
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
@@ -193,27 +188,8 @@ csv_data + "###" + output
         const result = await pyodide.runPythonAsync(code);
         const [csv, outputTextResult] = result.split("###");
         lastCSV = csv;
-        outputText.insertAdjacentHTML("beforeend", `
-          <div id="interpretation-reference" style="margin-top: 3em; display: flex; gap: 2em; align-items: flex-start; flex-wrap: wrap;">
-            <div style="flex: 1 1 500px; min-width: 300px;">
-              <h3 style="font-size: 1.1em; margin-bottom: 0.6em;">📘 Interpretation Reference</h3>
-              <p style="margin: 0 0 1em 0;">This explanation supports understanding how amplitude minima are interpreted:</p>
-              <p><strong>In this context, amplitude minima serve as a diagnostic tool:</strong></p>
-              <ul style="margin-top: 0.5em; padding-left: 1.2em;">
-                <li>When the signal exhibits deep, regularly spaced minima,<br>
-                    it suggests <strong>destructive interference</strong> among prime-frequency components.</li>
-                <li>When minima are shallow or irregular, it reflects a failure to cancel –<br>
-                    indicating <strong>constructive interference</strong> or non-critical behavior.</li>
-              </ul>
-            </div>
-            <div style="flex: 1 1 300px; min-width: 250px;">
-              <img src="A_simple_2D_digital_diagram_illustrates_interferen.png"
-                   alt="Destructive vs Constructive Interference Diagram"
-                   style="width: 100%; max-width: 360px; border: 1px solid #555; border-radius: 4px;">
-            </div>
-          </div>
-        `);
-        
+        outputText.textContent = outputTextResult;
+
         const bytes = await pyodide.FS.readFile("plot.png");
         const blob = new Blob([bytes], { type: "image/png" });
         lastImageURL = URL.createObjectURL(blob);
