@@ -195,6 +195,23 @@ csv_data + "###" + output
         lastCSV = csv;
         outputText.textContent = outputTextResult;
 
+        outputText.insertAdjacentHTML("beforeend", `
+          <div id="interpretation-reference" style="margin-top: 2em; border-top: 1px solid #555; padding-top: 1em;">
+            <h3>📘 Interpretation Reference</h3>
+            <p>This explanation supports understanding how amplitude minima are interpreted:</p>
+            <pre style="white-space: pre-wrap; background: #111; padding: 1em; border: 1px solid #444;">
+        In this context, amplitude minima serve as a diagnostic tool:
+         - When the signal exhibits deep, regularly spaced minima,
+           it suggests destructive interference among prime-frequency components.
+         - When minima are shallow or irregular, it reflects a failure to cancel –
+           indicating constructive interference or non-critical behavior.
+            </pre>
+            <img src="A_simple_2D_digital_diagram_illustrates_interferen.png" 
+                 alt="Destructive vs Constructive Interference Diagram" 
+                 style="max-width: 100%; margin-top: 1em; border: 1px solid #555; border-radius: 4px;">
+          </div>
+        `);
+        
         const bytes = await pyodide.FS.readFile("plot.png");
         const blob = new Blob([bytes], { type: "image/png" });
         lastImageURL = URL.createObjectURL(blob);
