@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +44,7 @@
   </style>
 </head>
 <body>
-  <h2>🧲 Harmonic Interference Operator – RH Analysis</h2>
+  <h2>🧮 Harmonic Interference Operator – RH Analysis</h2>
   <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
   <div>
     <label>Number of primes: <input type="number" id="num_primes" value="100"></label>
@@ -51,17 +52,11 @@
     <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4"></label>
     <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6"></label>
     <button onclick="runPython()">Generate Plot</button>
+    <button onclick="downloadCSV()">Download CSV</button>
+    <button onclick="downloadPNG()">Download PNG</button>
+    <button onclick="downloadPDF()">Download PDF</button>
   </div>
-
   <canvas id="plot" width="800" height="400"></canvas>
-
-  <div id="export-section" style="display:none; margin-top: 1em;">
-    <h3>📅 Export Results</h3>
-    <button onclick="downloadCSV()">📊 Download CSV</button>
-    <button onclick="downloadPNG()">🖼️ Download PNG</button>
-    <button onclick="downloadPDF()">📄 Download PDF</button>
-  </div>
-
   <div id="output-text">Ready.</div>
 
   <script>
@@ -74,6 +69,7 @@
       await pyodide.loadPackage(["matplotlib", "sympy", "numpy"]);
       pyodideReady = true;
     }
+
     loadPyodideAndPackages();
 
     async function runPython() {
@@ -87,47 +83,43 @@
       const sigmaA = document.getElementById("sigma_a").value;
       const sigmaB = document.getElementById("sigma_b").value;
 
-      const outputText = document.getElementById("output-text");
-      const exportSection = document.getElementById("export-section");
-
-      outputText.textContent = "Computing, please wait...";
-      exportSection.style.display = "none";
+      document.getElementById("output-text").textContent = "Computing, please wait...";
 
       const code = `
 import matplotlib.pyplot as plt
 import numpy as np
 from sympy import primerange
 
-sigmas = [0.5, float(${sigmaA}), float(${sigmaB})]
-num_primes = int(${numPrimes})
-t_max = int(${tMax})
+sigmas = [0.5, float({sigmaA}), float({sigmaB})]
+num_primes = int({numPrimes})
+t_max = int({tMax})
 t_points = 5000
 primes = list(primerange(2, 10000))[:num_primes]
 t = np.linspace(0, t_max, t_points)
 
 fig, ax = plt.subplots()
 output = ""
-csv_data = """sigma,avg_minima,deepest_minima,interpretation\n"""
+csv_data = "sigma,avg_minima,deepest_minima,interpretation\n"
 
 for sigma in sigmas:
     signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
-    ax.plot(t, signal, label='σ = {}'.format(sigma))
+    ax.plot(t, signal, label=f'σ = {sigma}')
     minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
     avg_min = np.mean(minima) if minima else None
     min_val = np.min(minima) if minima else None
     interp = (
         "Strong destructive interference (critical line)." if abs(sigma - 0.5) < 0.01 else
-        "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
+        "Partial interference – amplitudes not fully cancel." if sigma < 0.5 else
         "Constructive accumulation dominates."
     )
-    output += 'σ = {}\n'.format(sigma)
-    output += '  • Avg minima: {:.4f}\n'.format(avg_min) if avg_min else '  • No minima detected\n'
-    output += '  • Interpretation: {}\n\n'.format(interp)
-    csv_data += '{},{:.4f},{:.4f},{}\n'.format(sigma, avg_min, min_val, interp)
+    output += f"σ = {sigma}\n"
+    output += f"  • Avg minima: {avg_min:.4f}\n" if avg_min else "  • No minima detected\n"
+    output += f"  • Interpretation: {interp}\n\n"
+    csv_data += f"{sigma},{avg_min:.4f},{min_val:.4f},{interp}\n"
 
 ax.set_facecolor("black")
 fig.patch.set_facecolor("black")
-ax.set_title("Harmonic Signal Interference", color="white")
+ax.set_title("Harmonic Interference", color="white")
 ax.tick_params(colors='white')
 ax.legend()
 ax.text(0.98, 0.02, "Harmonic Operator – RH Context", color='white',
@@ -138,10 +130,15 @@ csv_data + "###" + output
       `;
 
       try {
-        const result = await pyodide.runPythonAsync(code);
-        const [csv, outputTextResult] = result.split("###");
+        const result = await pyodide.runPythonAsync(code
+          .replace(/{sigmaA}/g, sigmaA)
+          .replace(/{sigmaB}/g, sigmaB)
+          .replace(/{numPrimes}/g, numPrimes)
+          .replace(/{tMax}/g, tMax)
+        );
+        const [csv, outputText] = result.split("###");
         lastCSV = csv;
-        outputText.textContent = outputTextResult;
+        document.getElementById("output-text").textContent = outputText;
 
         const bytes = await pyodide.FS.readFile("plot.png");
         const blob = new Blob([bytes], { type: "image/png" });
@@ -155,9 +152,8 @@ csv_data + "###" + output
           ctx.drawImage(img, 0, 0);
         };
         img.src = lastImageURL;
-        exportSection.style.display = "block";
       } catch (err) {
-        outputText.textContent = "Error during computation:\n" + err;
+        document.getElementById("output-text").textContent = "Error during computation:\n" + err;
         console.error(err);
       }
     }
@@ -196,6 +192,11 @@ csv_data + "###" + output
         doc.text(row, 10, y);
         y += 7;
       });
+
+      const diag = new Image();
+      diag.src = "https://flaman55.github.io/millenniumchecked/assets/proofs/A_simple_2D_digital_diagram_illustrates_interferen.png";
+      await diag.decode();
+      doc.addImage(diag, "PNG", 10, y + 10, 180, 50);
 
       doc.save("interference_report.pdf");
     }
