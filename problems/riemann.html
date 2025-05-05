@@ -2,49 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MillenniumChecked – Riemann Hypothesis</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <title>Riemann Hypothesis – Flamandzki Solution</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: #eee;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2em;
+    }
+    h1, h2 {
+      color: #fff;
+    }
+    a {
+      color: #7cf;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    iframe {
+      width: 100%;
+      height: 800px;
+      border: none;
+      background-color: #222;
+    }
+    nav {
+      background-color: #222;
+      padding: 1em;
+      text-align: center;
+      border-bottom: 1px solid #444;
+    }
+    nav a {
+      margin: 0 1em;
+      font-weight: bold;
+    }
+    section {
+      margin-top: 3em;
+    }
+    .pdf-title {
+      margin: 1em 0 0.5em;
+      font-size: 1.2em;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>🧩 Riemann Hypothesis – Harmonic Resolution</h1>
-    <p>Resolution through destructive harmonic interference from prime logarithms.</p>
-  </header>
-
   <nav>
-    <ul>
-      <li><a href="#manifest">📄 Manifest</a></li>
-      <li><a href="#proof">📘 Proof</a></li>
-      <li><a href="#interactive-app">📊 Interactive App</a></li>
-    </ul>
+    <a href="#manifest">Manifest</a>
+    <a href="#proof">Proof</a>
+    <a href="#diagram">Structure</a>
+    <a href="#fourpillars">Prime Order</a>
   </nav>
-
-  <main>
-    <section>
-      <h2>🧠 Abstract</h2>
-      <p>The Riemann Hypothesis conjectures that all non-trivial zeros of the zeta function lie on the critical line ℜ(s) = 1/2. The Flamandzki Operator models harmonic interference from primes to evaluate cancellation behavior of complex frequencies. Unique minimization occurs only when σ = 1/2, establishing the necessity of the critical line.</p>
-    </section>
+  <div class="container">
+    <h1>Resolution of the Riemann Hypothesis</h1>
+    <p>This page presents the harmonic operator approach introduced by Flamandzki Artur, offering a novel path to resolving the Riemann Hypothesis via constructive interference analysis.</p>
 
     <section id="manifest">
-      <h2>📄 Manifest (Philosophical Context)</h2>
-      <iframe src="../assets/proofs/Manifest_Resolution_through_Construction.pdf" width="100%" height="600" style="border:1px solid #ccc;"></iframe>
+      <h2>📘 Manifest</h2>
+      <p class="pdf-title">Manifest Resolution through Construction</p>
+      <iframe src="/pdf/Manifest_Resolution_through_Construction.pdf"></iframe>
     </section>
 
     <section id="proof">
-      <h2>📘 Formal Proof (Mathematical Construction)</h2>
-      <iframe src="../assets/proofs/Flamandzki_HR_Proof_signed.pdf" width="100%" height="600" style="border:1px solid #ccc;"></iframe>
+      <h2>📄 Formal Proof</h2>
+      <p class="pdf-title">Flamandzki HR Proof</p>
+      <iframe src="/pdf/Flamandzki_HR_Proof_signed.pdf"></iframe>
     </section>
 
-    <section id="interactive-app">
-      <h2>📊 Harmonic Interference App</h2>
-      <p>This application lets users explore harmonic interference patterns by adjusting the sigma values. Use the graph to identify when destructive interference is most extreme—only at σ = 0.5.</p>
-      <iframe src="../apps/harmonic_app.html" width="100%" height="2000" style="border:none;"></iframe>
+    <section id="diagram">
+      <h2>📊 Structure of Reasoning</h2>
+      <p class="pdf-title">Map of the Proof Structure</p>
+      <iframe src="/pdf/Mapa_Struktury_Dowodow.pdf"></iframe>
     </section>
-  </main>
 
-  <footer>
-    <p>© 2025 Flamandzki Artur – All content protected under intellectual property rights. Cite source: <a href="https://millenniumchecked.org">millenniumchecked.org</a></p>
-  </footer>
+    <section id="fourpillars">
+      <h2>🔢 Prime Number Foundations</h2>
+      <p class="pdf-title">The Four Pillars of Number Order</p>
+      <iframe src="/pdf/Cztery _filary_porządku_liczbowego.pdf"></iframe>
+    </section>
+  </div>
 </body>
 </html>
