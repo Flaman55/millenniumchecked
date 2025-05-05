@@ -163,9 +163,9 @@ primes = list(primerange(2, 10000))[:int(${numPrimes})]
 t = np.linspace(0, int(${tMax}), 5000)
 
 colors = {
-    base_sigma: "#00BFFF",  # DeepSkyBlue
-    sigma_a: "#FF8C00",     # DarkOrange
-    sigma_b: "#A9A9A9"      # DarkGray
+    base_sigma: "#228B22",  # ForestGreen
+    sigma_a: "#DC143C",     # Crimson
+    sigma_b: "#FF8C00"      # DarkOrange
 }
 
 for sigma in sigmas:
@@ -174,7 +174,7 @@ for sigma in sigmas:
         "label": labels[sigma],
         "color": colors.get(sigma, "gray"),
         "alpha": 1.0 if sigma == base_sigma else 0.35,
-        "linewidth": 2.5 if sigma == base_sigma else 1.2,
+        "linewidth": 1.0 if sigma == base_sigma else 1.2,
         "linestyle": "--" if sigma == base_sigma else "-"
     }
 
