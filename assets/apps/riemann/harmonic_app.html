@@ -272,7 +272,12 @@ csv_data + "###" + output
   doc.setFontSize(10);
   doc.text("Behavior of prime harmonic interference near the critical line ℜ(s) = 0.5.", 10, 22);
 
-  let yPos = 30;
+  // Dodaj datę
+  const today = new Date();
+  const formattedDate = today.toISOString().slice(0, 10); // yyyy-mm-dd
+  doc.text(`Generated on: ${formattedDate}`, 10, 29);
+
+  let yPos = 35;
   const rows = lastCSV.trim().split("\n").slice(1); // bez nagłówka
 
   doc.setFontSize(9);
