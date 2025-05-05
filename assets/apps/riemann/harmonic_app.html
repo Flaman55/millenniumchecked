@@ -241,41 +241,62 @@ csv_data + "###" + output
     }
 
     async function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
-      doc.setFontSize(14);
-      doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 15);
-      doc.setFontSize(10);
-      doc.text("Behavior of prime harmonic interference near the critical line ℜ(s) = 0.5.", 10, 22);
+  // STRONA 1: pełnoekranowa grafika
+  const img = new Image();
+  img.src = lastImageURL;
+  await img.decode();
 
-      const img = new Image();
-      img.src = lastImageURL;
-      await img.decode();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const aspectRatio = img.width / img.height;
+  let imgWidth = pageWidth;
+  let imgHeight = pageWidth / aspectRatio;
 
-      const marginX = 10;
-      const maxWidth = 270;
-      const aspectRatio = img.height / img.width;
-      const scaledHeight = maxWidth * aspectRatio;
+  if (imgHeight > pageHeight) {
+    imgHeight = pageHeight;
+    imgWidth = pageHeight * aspectRatio;
+  }
 
-      doc.addImage(img, "PNG", marginX, 30, maxWidth, scaledHeight);
+  const x = (pageWidth - imgWidth) / 2;
+  const y = (pageHeight - imgHeight) / 2;
 
-      const startY = 30 + scaledHeight + 10;
-      let y = startY;
-      const rows = lastCSV.trim().split("\n").slice(1);
+  doc.addImage(img, "PNG", x, y, imgWidth, imgHeight);
 
-      doc.setFontSize(9);
-      rows.forEach(row => {
-        if (y > 190) {
-          doc.addPage("landscape");
-          y = 15;
-        }
-        doc.text(row, 10, y);
-        y += 6;
-      });
+  // STRONA 2: dane + licencja
+  doc.addPage("landscape");
+  doc.setFontSize(14);
+  doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 15);
+  doc.setFontSize(10);
+  doc.text("Behavior of prime harmonic interference near the critical line ℜ(s) = 0.5.", 10, 22);
 
-      doc.save("interference_report.pdf");
+  let yPos = 30;
+  const rows = lastCSV.trim().split("\n").slice(1); // bez nagłówka
+
+  doc.setFontSize(9);
+  rows.forEach(row => {
+    if (yPos > 190) {
+      doc.addPage("landscape");
+      yPos = 15;
     }
+    doc.text(row, 10, yPos);
+    yPos += 6;
+  });
+
+  // Licencja na dole
+  yPos += 10;
+  if (yPos > 190) {
+    doc.addPage("landscape");
+    yPos = 15;
+  }
+  doc.setFontSize(8);
+  doc.text("© Flamandzki Artur – Harmonic Operator", 10, yPos);
+  doc.text("Source: millenniumchecked.org", 10, yPos + 5);
+
+  doc.save("interference_report.pdf");
+}
   </script>
 </body>
 </html>
