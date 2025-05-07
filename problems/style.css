@@ -1,23 +1,23 @@
 /* Base Reset */
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #222;
-  background-color: #fff;
+  color: #eee;
+  background-color: #111;
   margin: 0;
   padding: 0;
 }
 
-main {
-  max-width: 800px;
+main, .container {
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 2em;
 }
 
 /* Headings */
 h1, h2, h3 {
-  color: #111;
+  color: #fff;
   font-weight: 600;
   margin-top: 2rem;
   margin-bottom: 1rem;
@@ -43,19 +43,19 @@ p {
 
 /* Links */
 a {
-  color: #0055ff;
+  color: #7cf;
   text-decoration: none;
 }
 
 a:hover {
   text-decoration: underline;
-  color: #0033aa;
+  color: #9df;
 }
 
 /* Download Buttons */
 .btn-download {
   display: inline-block;
-  background-color: #222;
+  background-color: #333;
   color: #fff;
   padding: 0.5rem 1.2rem;
   border-radius: 4px;
@@ -67,22 +67,58 @@ a:hover {
 }
 
 .btn-download:hover {
-  background-color: #444;
+  background-color: #555;
 }
 
 /* Horizontal rules */
 hr {
   border: none;
   height: 1px;
-  background-color: #ddd;
+  background-color: #444;
   margin: 2.5rem 0;
+}
+
+/* Navigation */
+nav {
+  background-color: #222;
+  padding: 1em;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+nav a {
+  margin: 0 1em;
+  font-weight: bold;
+}
+
+/* PDF titles */
+.pdf-title {
+  margin: 1em 0 0.5em;
+  font-size: 1.2em;
+}
+
+/* Iframes */
+iframe {
+  width: 100%;
+  height: 1600px;
+  border: none;
+  background-color: #222;
 }
 
 /* Footer */
 footer {
   font-size: 0.9rem;
-  color: #777;
-  padding: 2rem 1.5rem;
-  border-top: 1px solid #ddd;
+  color: #ccc;
+  padding: 2em;
   text-align: center;
+  border-top: 1px solid #444;
+  background-color: #222;
+}
+
+footer a {
+  color: #7cf;
+}
+
+footer a:hover {
+  color: #9df;
 }
