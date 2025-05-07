@@ -59,6 +59,17 @@ a {
   color: #7cf;
 }
 
+nav {
+  background-color: #222;
+  padding: 1em;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+nav a {
+  margin: 0 1em;
+  font-weight: bold;
+}
+
 footer {
   text-align: center;
   padding: 2rem 1rem;
