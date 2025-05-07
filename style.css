@@ -12,6 +12,12 @@ header {
   border-bottom: 1px solid #333;
 }
 
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2em;
+}
+
 .logo {
   height: 80px;
   margin-bottom: 1rem;
