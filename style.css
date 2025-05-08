@@ -81,12 +81,14 @@ nav a {
   overflow-x: auto;
   white-space: pre;
   font-family: monospace;
-  font-size: clamp(0.7rem, 1.2vw, 1rem); /* dynamiczne skalowanie */
+  font-size: clamp(0.6rem, 1vw, 0.9rem); /* mniejsze minimum */
   line-height: 1.5;
-  padding: 2rem;
+  padding: 2rem 1rem;
+  margin: 0;
   background-color: #000;
   color: #ccc;
   box-sizing: border-box;
+  text-align: left;
 }
 
 .tree-container a {
