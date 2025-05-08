@@ -85,7 +85,7 @@ nav a {
   line-height: 1.5;
   padding: 2rem 1rem;
   margin: 0;
-  background-color: #000;
+  background-color: transparent;
   color: #ccc;
   box-sizing: border-box;
   text-align: left;
@@ -102,6 +102,9 @@ nav a {
 
 .tree-container strong {
   color: #0ff;
+  display: block;
+  text-align: center;
+  margin-top: 0.5em;
 }
 
 footer {
