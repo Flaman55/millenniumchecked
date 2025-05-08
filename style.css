@@ -72,9 +72,11 @@ nav {
   text-align: left;
   border-bottom: 1px solid #444;
 }
+
 nav a {
   margin: 0 1em;
   font-weight: bold;
+  font-size: 1rem; /* dopasowane do problemów */
 }
 
 .tree-container {
