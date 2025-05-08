@@ -4,37 +4,36 @@
   <meta charset="UTF-8">
   <title>Harmonic Interference – Riemann</title>
   <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js">
-function resetGraphic() {
-  const canvas = document.getElementById("plot");
-  const ctx = canvas.getContext("2d");
-  const img = new Image();
-  img.onload = function () {
-    const containerWidth = document.querySelector(".container").clientWidth;
-    const scale = containerWidth / img.width;
-    canvas.width = containerWidth;
-    canvas.height = img.height * scale;
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = "HR education.png";
-}
-
-</script>
+    const defaultImageSrc = "HR education.png";  // <== tu
+    function resetGraphic() {
+      const canvas = document.getElementById("plot");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = function () {
+        const containerWidth = document.querySelector(".container").clientWidth;
+        const scale = containerWidth / img.width;
+        canvas.width = containerWidth;
+        canvas.height = img.height * scale;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = defaultImageSrc;
+    }
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-function resetGraphic() {
-  const canvas = document.getElementById("plot");
-  const ctx = canvas.getContext("2d");
-  const img = new Image();
-  img.onload = function () {
-    const containerWidth = document.querySelector(".container").clientWidth;
-    const scale = containerWidth / img.width;
-    canvas.width = containerWidth;
-    canvas.height = img.height * scale;
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = "HR education.png";
-}
-
-</script>
+    function resetGraphic() {
+      const canvas = document.getElementById("plot");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = function () {
+        const containerWidth = document.querySelector(".container").clientWidth;
+        const scale = containerWidth / img.width;
+        canvas.width = containerWidth;
+        canvas.height = img.height * scale;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = defaultImageSrc;
+    }
+  </script>
   <style>
     body {
       background-color: #111;
@@ -133,7 +132,7 @@ function resetGraphic() {
         canvas.height = img.height * scale;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       };
-      img.src = "HR education.png";
+      img.src = defaultImageSrc;
     };
 
     async function loadPyodideAndPackages() {
@@ -360,7 +359,7 @@ function resetGraphic() {
     canvas.height = img.height * scale;
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   };
-  img.src = "HR education.png";
+  img.src = defaultImageSrc;
 }
 
 </script>
