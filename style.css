@@ -77,6 +77,31 @@ nav a {
   font-weight: bold;
 }
 
+.tree-container {
+  overflow-x: auto;
+  white-space: pre;
+  font-family: monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 2rem;
+  background-color: #000;
+  color: #ccc;
+  box-sizing: border-box;
+}
+
+.tree-container a {
+  color: #7cf;
+  text-decoration: none;
+}
+
+.tree-container a:hover {
+  text-decoration: underline;
+}
+
+.tree-container strong {
+  color: #0ff;
+}
+
 footer {
   text-align: center;
   padding: 2rem 1rem;
