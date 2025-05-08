@@ -9,6 +9,18 @@ body {
   padding: 0;
 }
 
+header {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.logo-link img {
+  height: 80px;
+  margin-bottom: 1rem;
+  vertical-align: middle;
+}
+
 main, .container {
   max-width: 1000px;
   margin: 0 auto;
