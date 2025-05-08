@@ -6,14 +6,9 @@
   <meta name="description" content="Artur Flamandzki presents a unified harmonic framework addressing the Riemann Hypothesis and other Millennium Problems. Discover the MillenniumChecked approach to prime number theory and mathematical resonance.">
   <link rel="stylesheet" href="../style-unified.css">
 </head>
+
 <body>
   <div class="container">
-    <!--<header style="background-color: #111; padding: 1em; text-align: center;">
-      <a href="https://millenniumchecked.org" style="text-decoration: none;">
-        <img src="../assets/MR logo.png" alt="MillenniumChecked Logo" style="height: 60px;">
-      </a>
-    </header>-->
-
     <nav>
       <a href="../index.html">Home</a>
       <a href="#manifest">Manifest</a>
@@ -82,7 +77,16 @@
     <section id="structure">
       <h2>📊 Structure of Reasoning</h2>
       <p class="pdf-title">Map of the Proof Structure</p>
-      <iframe src="../assets/apps/riemann/harmonic_app.html"></iframe>
+    
+      <div id="app-container">
+        <img id="default-image" src="../assets/HR education.png" alt="Harmonic Interference – Reference Example" style="width:100%; max-width:900px; display: block; margin: 0 auto; border: 1px solid #444;">
+        <iframe id="harmonic-app" src="../assets/apps/riemann/harmonic_app.html" style="width:100%; height:600px; display: none; border: none;"></iframe>
+    
+        <div style="text-align: center; margin-top: 1em;">
+          <button onclick="showApp()">Generate Plot</button>
+          <button onclick="showDefault()">Show Reference Example</button>
+        </div>
+      </div>
     </section>
 
     <section id="endorsement" style="margin-top: 3em;">
@@ -118,6 +122,22 @@
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ea927387fee246ff91ee03b6eab617a3"}'></script>
   <!-- End Cloudflare Web Analytics -->
+
+  <script>
+    const img = document.getElementById("default-image");
+    const app = document.getElementById("harmonic-app");
+  
+    function showApp() {
+      img.style.display = "none";
+      app.style.display = "block";
+    }
+  
+    function showDefault() {
+      app.contentWindow.location.reload();
+      app.style.display = "none";
+      img.style.display = "block";
+    }
+  </script>
 
 </body>
 </html>
