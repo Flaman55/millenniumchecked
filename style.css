@@ -83,7 +83,7 @@ nav a {
   font-family: monospace;
   font-size: clamp(0.6rem, 1vw, 0.9rem); /* mniejsze minimum */
   line-height: 1.5;
-  padding: 2rem 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   margin: 0;
   background-color: transparent;
   color: #ccc;
