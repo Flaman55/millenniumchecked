@@ -1,18 +1,25 @@
 /* Sticky Table of Contents Styles */
+#layout {
+  display: flex;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
 .toc {
   position: sticky;
   top: 2rem;
   width: 220px;
-  padding: 1rem;
-  background-color: #111;
-  border: 1px solid #333;
   height: max-content;
-  z-index: 100;
+  background-color: #111;
+  padding: 1rem;
+  border: 1px solid #333;
+  z-index: 10;
 }
 
 .container {
   flex: 1;
   margin-left: 2rem;
+  padding: 2rem;
 }
 
 .toc h3 {
