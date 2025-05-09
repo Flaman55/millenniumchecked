@@ -87,9 +87,46 @@
         The critical line doesn’t exist because we define it. It exists because <strong>the structure of primes demands it</strong>.
       </p>
     
-      <div style="text-align: center; margin: 2em 0;">
-        <img src="../assets/interference_1000p_t10_a0.49_b0.51.png" alt="Harmonic Interference Plot" style="max-width: 100%; border: 1px solid #333; margin-bottom: 1em;">
-        <img src="../assets/HR Logic.png" alt="Flowchart from Primes to Amplitude Minimum" style="max-width: 100%; border: 1px solid #333;">
+      <h3>⚙️ How the Harmonic Operator Works</h3>
+      <p>
+        The harmonic operator is a mathematical construction built from prime numbers. Each prime contributes a wave, and these waves are summed into a single signal:
+      </p>
+    
+      <p style="text-align: center;">
+        <img src="../assets/Harmonic operator.png" alt="Harmonic Operator Formula" style="max-width: 420px; width: 90%; border: 1px solid #333; margin: 1em auto; display: block;">
+      </p>
+    
+      <p><strong>Where:</strong></p>
+      <ul>
+        <li><code>p</code> is a prime number</li>
+        <li><code>s = σ + it</code> is a complex variable</li>
+        <li>Each term <code>(1 / √p) ⋅ e<sup>−it log p</sup></code> is a wave of frequency <code>log p</code> and amplitude <code>1/√p</code></li>
+      </ul>
+    
+      <p>The full operator is a sum of all such waves. We don’t need to extend to infinity — the effect is visible after just a few hundred or thousand primes.</p>
+    
+      <h3>🛁 Why it works</h3>
+      <p>
+        This operator doesn’t just approximate a function — it <strong>is</strong> the structure behind the zeta function’s behavior. The rhythm of primes creates a <strong>pattern of interference</strong>, and at σ = 0.5, the waves cancel perfectly.
+      </p>
+    
+      <ul>
+        <li>For σ ≠ 0.5, weights are distorted → interference is incomplete</li>
+        <li>For σ = 0.5, the balance is exact → amplitude drops to near-zero</li>
+      </ul>
+    
+      <p>
+        This isn’t a symbolic result. It’s a consequence of structure — observable, buildable, and testable.
+      </p>
+    
+      <div style="display: flex; gap: 2%; justify-content: center; margin: 2em 0; flex-wrap: wrap;">
+        <img src="../assets/interference_1000p_t10_a0.49_b0.51.png"
+             alt="Harmonic Interference Plot"
+             style="flex: 1 1 48%; max-width: 48%; height: auto; border: 1px solid #333;">
+      
+        <img src="../assets/HR Logic.png"
+             alt="Flowchart from Primes to Amplitude Minimum"
+             style="flex: 1 1 48%; max-width: 48%; height: auto; border: 1px solid #333;">
       </div>
     </section>
     
