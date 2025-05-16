@@ -94,7 +94,7 @@
     </label>
 
     <div>
-      <label>Number of primes: <input type="number" id="num_primes" value="100"></label>
+      <label>Number of primes: <input type="number" id="num_primes" value="100" min="1" max="10000"></label>
       <label>Max t value: <input type="number" id="t_max" value="10"></label><br>
       <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4"></label>
       <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6"></label>
@@ -190,6 +190,8 @@ output = ""
 csv_data = "label,sigma,avg_minima,deepest_minima,interpretation\\n"
 
 def generate_n_primes(n):
+    if n > 10000:
+    n = 10000  # No one survives beyond this line
     primes = []
     candidate = 2
     while len(primes) < n:
