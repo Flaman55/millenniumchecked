@@ -191,11 +191,10 @@ csv_data = "label,sigma,avg_minima,deepest_minima,interpretation\\n"
 
 def generate_n_primes(n):
     if n > 10000:
-    n = 10000  # No one survives beyond this line
+      n = 10000  # No one survives beyond this line
     primes = []
     candidate = 2
     while len(primes) < n:
-        # prosty test na pierwszość (albo możesz użyć sympy.isprime)
         for p in primes:
             if candidate % p == 0:
                 break
