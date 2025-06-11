@@ -189,8 +189,8 @@
         `);
         const R = parseFloat(primesLogSum);
         tMax = (gamma * numPrimes) / R;
-        document.getElementById("t_max").value = tMax.toFixed(0);
-        document.getElementById("output-text").textContent += "AUTO mode: computed t = " + tMax.toFixed(0);
+        document.getElementById("t_max").value = Math.floor(tMax);
+        document.getElementById("output-text").textContent += "AUTO mode: computed t = " + Math.floor(tMax);
       }
       
       exportSection.style.display = "none";
