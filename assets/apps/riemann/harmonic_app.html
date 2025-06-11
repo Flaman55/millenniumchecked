@@ -160,6 +160,10 @@
       }
 
       const numPrimes = parseInt(document.getElementById("num_primes").value);
+      if (numPrimes > 10000) { 
+        document.getElementById("num_primes").value = 10000
+        numPrimes = 10000
+      }
       const mode = document.getElementById("modeSelector").value;
       let tMax = parseFloat(document.getElementById("t_max").value);
       
