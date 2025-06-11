@@ -188,7 +188,7 @@
       log_sum / log_max
         `);
         const R = parseFloat(primesLogSum);
-        tMax = (gamma * numPrimes) / R;
+        tMax = ((1.5 - gamma) * numPrimes) / R;
         document.getElementById("t_max").value = Math.floor(tMax);
         document.getElementById("output-text").textContent += "AUTO mode: computed t = " + Math.floor(tMax);
       }
