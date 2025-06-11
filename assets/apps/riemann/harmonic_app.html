@@ -167,6 +167,16 @@
       const mode = document.getElementById("modeSelector").value;
       let tMax = parseFloat(document.getElementById("t_max").value);
       
+      
+      const sigmaA = parseFloat(document.getElementById("sigma_a").value);
+      const sigmaB = parseFloat(document.getElementById("sigma_b").value);
+      const dpi = document.getElementById("dpiSlider").value;
+
+      const outputText = document.getElementById("output-text");
+      const exportSection = document.getElementById("export-section");
+
+      outputText.textContent = "Computing, please wait...";
+      
       if (mode === "auto") {
         const gamma = parseFloat(document.getElementById("gammaSlider").value);
         const primesLogSum = await pyodide.runPythonAsync(`
@@ -182,14 +192,7 @@
         document.getElementById("t_max").value = tMax.toFixed(4);
         document.getElementById("output-text").textContent = "AUTO mode: computed t = " + tMax.toFixed(4);
       }
-      const sigmaA = parseFloat(document.getElementById("sigma_a").value);
-      const sigmaB = parseFloat(document.getElementById("sigma_b").value);
-      const dpi = document.getElementById("dpiSlider").value;
-
-      const outputText = document.getElementById("output-text");
-      const exportSection = document.getElementById("export-section");
-
-      outputText.textContent = "Computing, please wait...";
+      
       exportSection.style.display = "none";
 
       const code = `
