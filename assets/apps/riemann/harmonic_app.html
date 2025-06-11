@@ -175,7 +175,7 @@
         `);
         const R = parseFloat(primesLogSum);
         tMax = (gamma * numPrimes) / R;
-        document.getElementById("t_max").value = tMax;
+        document.getElementById("t_max").value = tMax.toFixed(4);
         document.getElementById("output-text").textContent = "AUTO mode: computed t = " + tMax.toFixed(4);
       }
       const sigmaA = parseFloat(document.getElementById("sigma_a").value);
