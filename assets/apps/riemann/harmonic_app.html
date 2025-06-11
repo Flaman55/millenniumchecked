@@ -175,7 +175,7 @@
       const outputText = document.getElementById("output-text");
       const exportSection = document.getElementById("export-section");
 
-      outputText.textContent = "Computing, please wait...";
+      outputText.textContent = "Computing, please wait...\n";
       
       if (mode === "auto") {
         const gamma = parseFloat(document.getElementById("gammaSlider").value);
@@ -190,7 +190,7 @@
         const R = parseFloat(primesLogSum);
         tMax = (gamma * numPrimes) / R;
         document.getElementById("t_max").value = tMax.toFixed(4);
-        document.getElementById("output-text").textContent = "AUTO mode: computed t = " + tMax.toFixed(4);
+        document.getElementById("output-text").textContent += "AUTO mode: computed t = " + tMax.toFixed(4);
       }
       
       exportSection.style.display = "none";
