@@ -219,7 +219,7 @@
             colors[sigma_b] = "#FF8C00"  # DarkOrange
             
         naturalne = False
-        t_values = np.arange(t_start, t_end, t_step)
+        t_values = np.arange(tMin, tMax, 0.01)
 
         for sigma in sigmas:
           s_primes = np.array([sum(p**(-sigma) * np.cos(ti * np.log(p)) for p in primes) for ti in t_values])
