@@ -184,7 +184,7 @@
       const exportSection = document.getElementById("export-section");
 
       outputText.textContent = "Computing, please wait...\n";
-      document.getElementById("output-text").textContent += "aktualne";
+      document.getElementById("output-text").textContent += "poprawiono kolor";
       
       if (mode === "auto") {
         const gamma = parseFloat(document.getElementById("gammaSlider").value);
@@ -254,6 +254,14 @@
         
         primes = generate_n_primes(int(${numPrimes}))
         t = np.linspace(int(${tMin}), int(${tMax}), 5000)
+
+        colors = {
+            base_sigma: "#228B22"  # ForestGreen
+        }
+        if sigma_a != base_sigma:
+            colors[sigma_a] = "#DC143C"  # Crimson
+        if sigma_b != base_sigma and sigma_b != sigma_a:
+            colors[sigma_b] = "#FF8C00"  # DarkOrange
         
         for sigma in sigmas:
             signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
