@@ -69,6 +69,10 @@ a:hover {
   color: #9df;
 }
 
+#t_value {
+  width: 60px;
+}
+
 /* Download Buttons */
 .btn-download {
   display: inline-block;
