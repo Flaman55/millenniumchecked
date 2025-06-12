@@ -245,7 +245,7 @@
               if s_primes[i] < s_primes[i - 1] and s_primes[i] < s_primes[i + 1]
           ]
           
-          depth_threshold = 0.05  # lub inna wartość wg Twoich testów, np. 0.02
+          depth_threshold = 1.5  # lub inna wartość wg Twoich testów, np. 0.02
           deep_minima = [(tt, val) for (tt, val) in minima if val < depth_threshold]
       
           avg_min = np.mean([val for tt, val in deep_minima]) if deep_minima else None
