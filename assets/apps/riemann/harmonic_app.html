@@ -249,7 +249,7 @@
             return primes
         
         primes = generate_n_primes(int(${numPrimes}))
-        max_n = primes[-1]
+        max_n = len(primes)
         t = np.linspace(int(${tMin}), int(${tMax}), 5000)
 
         colors = {
