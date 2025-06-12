@@ -222,7 +222,9 @@
         for s in sigmas:
             if s == base_sigma:
                 labels[s] = f"σ = {s} (base)"
-                colors[base_sigma] = "#228B22"  # ForestGreen
+                colors: {
+                  base_sigma: "#228B22"  # ForestGreen
+                }
             elif s == sigma_a:
                 labels[s] = f"σ = {s} (A)"
                 colors[sigma_a] = "#DC143C"  # Crimson
