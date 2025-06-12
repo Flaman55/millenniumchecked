@@ -221,34 +221,49 @@
         naturalne = False
         
         for sigma in sigmas:
-            s_primes = np.array([sum(p**(-sigma) * np.cos(ti * np.log(p)) for p in primes) for ti in t])
+          s_primes = np.array([sum(p**(-sigma) * np.cos(ti * np.log(p)) for p in primes) for ti in t_values])
+      
+          if naturalne:
+              s_nat = np.array([sum(n**(-sigma) * np.cos(ti * np.log(n)) for n in range(2, max_n+1)) for ti in t_values])
+      
+          style = {
+              "label": labels[sigma],
+              "color": colors.get(sigma, "gray"),
+              "alpha": 1.0 if sigma == base_sigma else 0.35,
+              "linewidth": 1.0 if sigma == base_sigma else 1.2,
+              "linestyle": "--" if sigma == base_sigma else "-"
+          }
+      
+          ax.plot(t_values, s_primes, label=f"σ = {sigma} (primes)", color=style["color"])
+          if naturalne:
+              ax.plot(t_values, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
+      
+          minima = [
+              (t_values[i], s_primes[i])
+              for i in range(1, len(s_primes) - 1)
+              if s_primes[i] < s_primes[i - 1] and s_primes[i] < s_primes[i + 1]
+          ]
+      
+          deep_minima = [(tt, val) for (tt, val) in minima if val < depth_threshold]
+      
+          avg_min = np.mean([val for tt, val in deep_minima]) if deep_minima else None
+          min_val = np.min([val for tt, val in deep_minima]) if deep_minima else None
+      
+          t_list_str = ", ".join("{:.4f}".format(tt) for tt, val in deep_minima)
+      
+          interp = (
+              "Strong destructive interference (critical line)." if abs(sigma - 0.5) < 0.01 else
+              "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
+              "Constructive accumulation dominates."
+          )
+      
+          output += f"{labels[sigma]}\\n"
+          output += f"  • Deep minima: {t_list_str if t_list_str else '(none)'}\\n"
+          output += "  • Avg depth: {:.4f}\\n".format(avg_min) if avg_min is not None else "  • No deep minima\\n"
+          output += f"  • Interpretation: {interp}\\n\\n"
+      
+          csv_data += f"{labels[sigma]},{sigma:.4f},{min_val:.4f if min_val is not None else 'n/a'},{interp}\\n"
 
-            if naturalne:
-              s_nat = np.array([sum(n**(-sigma) * np.cos(ti * np.log(n)) for n in range(2, max_n+1)) for ti in t])
-              
-            style = {
-                "label": labels[sigma],
-                "color": colors.get(sigma, "gray"),
-                "alpha": 1.0 if sigma == base_sigma else 0.35,
-                "linewidth": 1.0 if sigma == base_sigma else 1.2,
-                "linestyle": "--" if sigma == base_sigma else "-"
-            }
-        
-            ax.plot(t, s_primes, label=f"σ = {sigma} (primes)", color=colors.get(sigma, None))
-            if naturalne:
-              ax.plot(t, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
-            minima = [s_primes[i] for i in range(1, len(s_primes)-1) if s_primes[i]<s_primes[i-1] and s_primes[i]<s_primes[i+1]]
-            avg_min = np.mean(minima) if minima else None
-            min_val = np.min(minima) if minima else None
-            interp = (
-                "Strong destructive interference (critical line)." if abs(sigma - 0.5) < 0.01 else
-                "Partial interference – amplitudes not fully canceling." if sigma < 0.5 else
-                "Constructive accumulation dominates."
-            )
-            output += f"{labels[sigma]}\\n"
-            output += "  • Avg minima: {:.4f}\\n".format(avg_min) if avg_min else "  • No minima detected\\n"
-            output += f"  • Interpretation: {interp}\\n\\n"
-            csv_data += f"{labels[sigma]},{sigma:.4f},{min_val:.4f},{interp}\\n"
 
         zeros = js_zeros
         for z in zeros:
