@@ -179,7 +179,7 @@
       const sigmaB = parseFloat(document.getElementById("sigma_b").value);
       const dpi = document.getElementById("dpiSlider").value;
       const zeros = await fetchZerosFromFile(tMin, tMax);
-      const primes = await fetchPrimesFromFile(2, numPrimes);
+      const preparedPrimes = await fetchPrimesFromFile(numPrimes);
       await pyodide.globals.set("js_zeros", zeros);
 
       const outputText = document.getElementById("output-text");
@@ -234,21 +234,8 @@
         fig, ax = plt.subplots()
         output = ""
         csv_data = "label,sigma,avg_minima,deepest_minima,interpretation\\n"
-        
-        def generate_n_primes(n):
-            if n > 10000:
-              n = 10000  # No one survives beyond this line
-            primes = []
-            candidate = 2
-            while len(primes) < n:
-                for p in primes:
-                    if candidate % p == 0:
-                        break
-                else:
-                    primes.append(candidate)
-                candidate += 1
-            return primes
-        
+
+        primes = preparedPrimes
         max_n = len(primes)
         t = np.linspace(int(${tMin}), int(${tMax}), 5000)
 
@@ -344,13 +331,16 @@
       return zeros.filter(z => z >= tMin && z <= tMax && !isNaN(z));
     }
 
-    async function fetchPrimesFromFile(pMin = 2, pMax = 100) {
+    async function fetchPrimesFromFile(limit = 1000) {
       const response = await fetch("primes_milion.txt");
       const text = await response.text();
       const lines = text.trim().split("\n");
-      const zeros = lines.map(line => parseFloat(line.split(/\s+/)[1]));
-      return zeros.filter(z => z >= pMin && z <= pMax && !isNaN(z));
+      const primes = lines
+        .map(line => parseInt(line.trim()))
+        .filter(p => !isNaN(p));
+      return primes.slice(0, limit);
     }
+
 
     function generateFileName(ext) {
       const sigmaA = document.getElementById("sigma_a").value;
