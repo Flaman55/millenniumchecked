@@ -304,7 +304,8 @@
       const result = await pyodide.runPythonAsync(code);
       const [csv, outputTextResult] = result.split("###");
       lastCSV = csv;
-      outputText.textContent = outputTextResult;
+      outputText.textContent = outputTextResult + "\n\n";
+      outputText.textContent += `Fetched ${zeros.length} zeta zeros:\n` + zeros.map(z => z.toFixed(6)).join(", ") + "\n\n";
 
       const bytes = await pyodide.FS.readFile("plot.png");
       const blob = new Blob([bytes], { type: "image/png" });
