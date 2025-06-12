@@ -110,11 +110,6 @@
             <option value="auto">Auto (Phase Compensation)</option>
           </select>
         </label>
-        <label>γ (phase coherence tolerance):
-          <input type="range" id="gammaSlider" min="0.5" max="1.0" step="0.01" value="0.9"
-                 oninput="document.getElementById('gammaLabel').textContent = this.value">
-          <span id="gammaLabel">0.9</span>
-        </label>
       </div>
       <button onclick="runPython()">Generate Plot</button>
       <button onclick="resetGraphic()">Reset to Default Graphic</button>
