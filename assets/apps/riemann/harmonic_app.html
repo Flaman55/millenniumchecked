@@ -178,6 +178,7 @@
       const sigmaA = parseFloat(document.getElementById("sigma_a").value);
       const sigmaB = parseFloat(document.getElementById("sigma_b").value);
       const dpi = document.getElementById("dpiSlider").value;
+      const zeros = await fetchZerosFromFile(tMin, tMax);
 
       const outputText = document.getElementById("output-text");
       const exportSection = document.getElementById("export-section");
@@ -297,7 +298,8 @@
         const result = await pyodide.runPythonAsync(code);
         const [csv, outputTextResult] = result.split("###");
         lastCSV = csv;
-        outputText.textContent = outputTextResult;
+        outputText.textContent = outputTextResult + "\n\n";
+        outputText.textContent += `Fetched ${zeros.length} zeta zeros:\n` + zeros.map(z => z.toFixed(6)).join(", ") + "\n\n";
 
         const bytes = await pyodide.FS.readFile("plot.png");
         const blob = new Blob([bytes], { type: "image/png" });
@@ -318,6 +320,14 @@
         outputText.textContent = "Error during computation:\n" + err;
         console.error(err);
       }
+    }
+
+    async function fetchZerosFromFile(tMin = 10, tMax = 100) {
+      const response = await fetch("Zeros_zeta1_10000.txt");
+      const text = await response.text();
+      const lines = text.trim().split("\n");
+      const zeros = lines.map(line => parseFloat(line.split(/\s+/)[1]));
+      return zeros.filter(z => z >= tMin && z <= tMax && !isNaN(z));
     }
 
     function generateFileName(ext) {
@@ -344,23 +354,23 @@
     }
 
     async function downloadPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-
-  // STRONA 1: pełnoekranowa grafika
-  const img = new Image();
-  img.src = lastImageURL;
-  await img.decode();
-
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const aspectRatio = img.width / img.height;
-  let imgWidth = pageWidth;
-  let imgHeight = pageWidth / aspectRatio;
-
-  if (imgHeight > pageHeight) {
-    imgHeight = pageHeight;
-    imgWidth = pageHeight * aspectRatio;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+  
+    // STRONA 1: pełnoekranowa grafika
+    const img = new Image();
+    img.src = lastImageURL;
+    await img.decode();
+  
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const aspectRatio = img.width / img.height;
+    let imgWidth = pageWidth;
+    let imgHeight = pageWidth / aspectRatio;
+  
+    if (imgHeight > pageHeight) {
+      imgHeight = pageHeight;
+      imgWidth = pageHeight * aspectRatio;
   }
 
   const x = (pageWidth - imgWidth) / 2;
