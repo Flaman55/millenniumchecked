@@ -249,6 +249,7 @@
             return primes
         
         primes = generate_n_primes(int(${numPrimes}))
+        max_n = primes[-1]
         t = np.linspace(int(${tMin}), int(${tMax}), 5000)
 
         colors = {
@@ -260,7 +261,9 @@
             colors[sigma_b] = "#FF8C00"  # DarkOrange
         
         for sigma in sigmas:
-            signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
+            // signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
+            s_primes = np.array([sum(p**(-sigma) * np.cos(ti * log(p)) for p in primes) for ti in t])
+            s_nat = np.array([sum(n**(-sigma) * np.cos(ti * log(n)) for n in range(2, max_n+1)) for ti in t])
             style = {
                 "label": labels[sigma],
                 "color": colors.get(sigma, "gray"),
@@ -269,7 +272,9 @@
                 "linestyle": "--" if sigma == base_sigma else "-"
             }
         
-            ax.plot(t, signal, **style)
+            // ax.plot(t, signal, **style)
+            ax.plot(t, s_primes, label=f"σ = {sigma} (primes)", color=colors.get(sigma, None))
+            ax.plot(t, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
             minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
             avg_min = np.mean(minima) if minima else None
             min_val = np.min(minima) if minima else None
