@@ -259,11 +259,14 @@
             colors[sigma_a] = "#DC143C"  # Crimson
         if sigma_b != base_sigma and sigma_b != sigma_a:
             colors[sigma_b] = "#FF8C00"  # DarkOrange
+            
+        naturalne = false
         
         for sigma in sigmas:
             s_primes = np.array([sum(p**(-sigma) * np.cos(ti * np.log(p)) for p in primes) for ti in t])
 
-            s_nat = np.array([sum(n**(-sigma) * np.cos(ti * np.log(n)) for n in range(2, max_n+1)) for ti in t])
+            if naturalne:
+              s_nat = np.array([sum(n**(-sigma) * np.cos(ti * np.log(n)) for n in range(2, max_n+1)) for ti in t])
             style = {
                 "label": labels[sigma],
                 "color": colors.get(sigma, "gray"),
