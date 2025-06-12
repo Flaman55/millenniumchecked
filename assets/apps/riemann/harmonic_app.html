@@ -169,6 +169,7 @@
       const doc = parser.parseFromString(text, 'text/html');
       const rows = Array.from(doc.querySelectorAll('table.table tbody tr'));
       const zeros = rows.map(row => parseFloat(row.children[1].textContent));
+      console.log("Fetched zeros:", zeros);
       return zeros.filter(z => !isNaN(z));
     } catch (err) {
       console.error("Error fetching zeros:", err);
