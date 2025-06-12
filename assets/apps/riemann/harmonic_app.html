@@ -184,6 +184,7 @@
       const exportSection = document.getElementById("export-section");
 
       outputText.textContent = "Computing, please wait...\n";
+      document.getElementById("output-text").textContent += "aktualne";
       
       if (mode === "auto") {
         const gamma = parseFloat(document.getElementById("gammaSlider").value);
