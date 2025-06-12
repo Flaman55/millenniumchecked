@@ -213,7 +213,7 @@
         // ))
         sigmas = list(dict.fromkeys(
             [base_sigma] +
-            ([] if sigma_a == base_sigma else [base_sigma]) +
+            ([] if sigma_a == base_sigma else [sigma_a]) +
             ([] if sigma_b == base_sigma or sigma_b == sigma_a else [sigma_b])
         ))
         
