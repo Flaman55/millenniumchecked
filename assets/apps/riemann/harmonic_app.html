@@ -179,8 +179,9 @@
       const sigmaB = parseFloat(document.getElementById("sigma_b").value);
       const dpi = document.getElementById("dpiSlider").value;
       const zeros = await fetchZerosFromFile(tMin, tMax);
-      const preparedPrimes = await fetchPrimesFromFile(numPrimes);
       await pyodide.globals.set("js_zeros", zeros);
+      const preparedPrimes = await fetchPrimesFromFile(numPrimes);
+      await pyodide.globals.set("preparedPrimes", preparedPrimes);
 
       const outputText = document.getElementById("output-text");
       const exportSection = document.getElementById("export-section");
