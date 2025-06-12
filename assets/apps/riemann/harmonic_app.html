@@ -264,8 +264,8 @@
           output += "  • Avg depth: {:.4f}\\n".format(avg_min) if avg_min is not None else "  • No deep minima\\n"
           output += f"  • Interpretation: {interp}\\n\\n"
       
-          csv_data += f"{labels[sigma]},{sigma:.4f},{min_val:.4f if min_val is not None else 'n/a'},{interp}\\n"
-
+          min_val_str = "{:.4f}".format(min_val) if min_val is not None else "n/a"
+          csv_data += f"{labels[sigma]},{sigma:.4f},{min_val_str},{interp}\\n"
 
         zeros = js_zeros
         for z in zeros:
