@@ -69,7 +69,11 @@ a:hover {
   color: #9df;
 }
 
-#t_value {
+#t_min {
+  width: 60px;
+}
+
+#t_max {
   width: 60px;
 }
 
