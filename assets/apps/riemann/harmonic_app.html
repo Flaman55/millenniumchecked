@@ -252,6 +252,7 @@
           min_val = np.min([val for tt, val in deep_minima]) if deep_minima else None
       
           t_list_str = ", ".join("{:.4f}".format(tt) for tt, val in deep_minima)
+          amp_list_str = ", ".join("{:.4f}".format(val) for tt, val in deep_minima)
       
           interp = (
               "Strong destructive interference (critical line)." if abs(sigma - 0.5) < 0.01 else
@@ -261,6 +262,7 @@
       
           output += f"{labels[sigma]}\\n"
           output += f"  • Deep minima: {t_list_str if t_list_str else '(none)'}\\n"
+          output += f"  • Amplitudes: {amp_list_str if amp_list_str else '(none)'}\n"
           output += "  • Avg depth: {:.4f}\\n".format(avg_min) if avg_min is not None else "  • No deep minima\\n"
           output += f"  • Interpretation: {interp}\\n\\n"
       
