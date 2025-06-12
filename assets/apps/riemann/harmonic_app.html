@@ -188,11 +188,6 @@
       const preparedPrimes = await fetchPrimesFromFile(numPrimes);
       await pyodide.globals.set("preparedPrimes", preparedPrimes);
       
-      if (mode === "auto") {
-        document.getElementById("t_max").value = Math.floor(tMax);
-        document.getElementById("output-text").textContent += "AUTO mode: computed t = " + Math.floor(tMax);
-      }
-      
       exportSection.style.display = "none";
 
       const code = `
