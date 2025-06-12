@@ -179,6 +179,7 @@
       const sigmaB = parseFloat(document.getElementById("sigma_b").value);
       const dpi = document.getElementById("dpiSlider").value;
       const zeros = await fetchZerosFromFile(tMin, tMax);
+      await pyodide.globals.set("js_zeros", zeros);
 
       const outputText = document.getElementById("output-text");
       const exportSection = document.getElementById("export-section");
@@ -281,7 +282,10 @@
             output += "  • Avg minima: {:.4f}\\n".format(avg_min) if avg_min else "  • No minima detected\\n"
             output += f"  • Interpretation: {interp}\\n\\n"
             csv_data += f"{labels[sigma]},{sigma:.4f},{min_val:.4f},{interp}\\n"
-        
+
+        zeros = js_zeros
+        for z in zeros:
+            ax.axvline(x=z, color="cyan", linestyle="--", linewidth=0.8, alpha=0.6)
         ax.set_facecolor("black")
         fig.patch.set_facecolor("black")
         ax.set_title("Harmonic Signal Interference", color="white")
