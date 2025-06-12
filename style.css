@@ -81,6 +81,14 @@ a:hover {
   width: 60px;
 }
 
+#sigma_a {
+  width: 30px;
+}
+
+#sigma_b {
+  width: 30px;
+}
+
 /* Download Buttons */
 .btn-download {
   display: inline-block;
