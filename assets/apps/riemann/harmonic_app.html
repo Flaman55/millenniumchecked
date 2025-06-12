@@ -88,14 +88,13 @@
     <h2>🔬 Harmonic Interference Operator – RH Analysis</h2>
     <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
 
-    <label>Image Quality (DPI):
-      <input type="range" id="dpiSlider" min="800" max="1800" step="50" value="1200"
-             oninput="document.getElementById('dpiLabel').textContent = this.value">
-      <span id="dpiLabel">1200</span>
-    </label>
-
     <div>
       <div class="input-row">
+        <label>Image Quality (DPI):
+          <input type="range" id="dpiSlider" min="800" max="1800" step="50" value="1200"
+                 oninput="document.getElementById('dpiLabel').textContent = this.value">
+          <span id="dpiLabel">1200</span>
+        </label>
         <label>Number of primes: <input type="number" id="num_primes" value="100" min="1" max="10000"></label>
       </div>
       <div class="input-row">
@@ -184,7 +183,7 @@
       const exportSection = document.getElementById("export-section");
 
       outputText.textContent = "Computing, please wait...\n";
-      document.getElementById("output-text").textContent += "usunięto br";
+      document.getElementById("output-text").textContent += "przeniesiono dpi";
       
       if (mode === "auto") {
         const gamma = parseFloat(document.getElementById("gammaSlider").value);
