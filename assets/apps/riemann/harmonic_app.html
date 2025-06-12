@@ -178,28 +178,17 @@
       const sigmaA = parseFloat(document.getElementById("sigma_a").value);
       const sigmaB = parseFloat(document.getElementById("sigma_b").value);
       const dpi = document.getElementById("dpiSlider").value;
+
+      const outputText = document.getElementById("output-text");
+      const exportSection = document.getElementById("export-section");
+      outputText.textContent = "Computing, please wait...\n";
+
       const zeros = await fetchZerosFromFile(tMin, tMax);
       await pyodide.globals.set("js_zeros", zeros);
       const preparedPrimes = await fetchPrimesFromFile(numPrimes);
       await pyodide.globals.set("preparedPrimes", preparedPrimes);
-
-      const outputText = document.getElementById("output-text");
-      const exportSection = document.getElementById("export-section");
-
-      outputText.textContent = "Computing, please wait...\n";
       
       if (mode === "auto") {
-        const gamma = parseFloat(document.getElementById("gammaSlider").value);
-        const primesLogSum = await pyodide.runPythonAsync(`
-          from sympy import primerange
-          import numpy as np
-          primes = list(primerange(1, ${numPrimes + 1}))
-          log_sum = sum(np.log(p) for p in primes)
-          log_max = np.log(primes[-1])
-          log_sum / log_max
-        `);
-        const R = parseFloat(primesLogSum);
-        tMax = ((1.5 - gamma) * numPrimes) / R;
         document.getElementById("t_max").value = Math.floor(tMax);
         document.getElementById("output-text").textContent += "AUTO mode: computed t = " + Math.floor(tMax);
       }
