@@ -179,6 +179,7 @@
       const sigmaB = parseFloat(document.getElementById("sigma_b").value);
       const dpi = document.getElementById("dpiSlider").value;
       const zeros = await fetchZerosFromFile(tMin, tMax);
+      const primes = await fetchPrimesFromFile(2, numPrimes);
       await pyodide.globals.set("js_zeros", zeros);
 
       const outputText = document.getElementById("output-text");
@@ -248,7 +249,6 @@
                 candidate += 1
             return primes
         
-        primes = generate_n_primes(int(${numPrimes}))
         max_n = len(primes)
         t = np.linspace(int(${tMin}), int(${tMax}), 5000)
 
@@ -342,6 +342,14 @@
       const lines = text.trim().split("\n");
       const zeros = lines.map(line => parseFloat(line.split(/\s+/)[1]));
       return zeros.filter(z => z >= tMin && z <= tMax && !isNaN(z));
+    }
+
+    async function fetchPrimesFromFile(pMin = 2, pMax = 100) {
+      const response = await fetch("primes_milion.txt");
+      const text = await response.text();
+      const lines = text.trim().split("\n");
+      const zeros = lines.map(line => parseFloat(line.split(/\s+/)[1]));
+      return zeros.filter(z => z >= pMin && z <= pMax && !isNaN(z));
     }
 
     function generateFileName(ext) {
