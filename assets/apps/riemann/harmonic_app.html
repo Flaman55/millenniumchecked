@@ -270,7 +270,7 @@
         zeros = js_zeros
         for z in zeros:
             ax.axvline(x=z, color="cyan", linestyle="--", linewidth=0.8, alpha=0.6)
-            ax.axhline(y=0, color="white", linestyle=":", linewidth=0.5, alpha=0.7)
+            ax.axhline(y=depth_threshold, color="white", linestyle=":", linewidth=0.5, alpha=0.7)
         ax.set_facecolor("black")
         fig.patch.set_facecolor("black")
         ax.set_title("Harmonic Signal Interference", color="white")
