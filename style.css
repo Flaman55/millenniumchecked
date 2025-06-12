@@ -69,6 +69,17 @@ a:hover {
   color: #9df;
 }
 
+.input-row {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  margin-top: 0.5em;
+}
+
+label {
+  color: #eee;
+}
+
 #t_min {
   width: 60px;
 }
