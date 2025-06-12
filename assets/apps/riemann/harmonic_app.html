@@ -103,14 +103,6 @@
       </div>
       <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4" min="0.1" max="1"></label>
       <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6" min="0.1" max="1"></label>
-      <div class="input-row">
-        <label>Mode:
-          <select id="modeSelector">
-            <option value="manual">Manual (custom t)</option>
-            <option value="auto">Auto (Phase Compensation)</option>
-          </select>
-        </label>
-      </div>
       <button onclick="runPython()">Generate Plot</button>
       <button onclick="resetGraphic()">Reset to Default Graphic</button>
     </div>
@@ -165,7 +157,6 @@
         document.getElementById("num_primes").value = 10000
         numPrimes = 10000
       }
-      const mode = document.getElementById("modeSelector").value;
       let tMin = parseFloat(document.getElementById("t_min").value);
       let tMax = parseFloat(document.getElementById("t_max").value);
       
