@@ -160,6 +160,23 @@
   }
   loadPyodideAndPackages();
 
+  async function fetchZeros(tMin = 10, limit = 30) {
+    const url = `https://www.lmfdb.org/zeros/zeta/list?N=&t=${tMin}&limit=${limit}`;
+    try {
+      const response = await fetch(url);
+      const text = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const rows = Array.from(doc.querySelectorAll('table.table tbody tr'));
+      const zeros = rows.map(row => parseFloat(row.children[1].textContent));
+      return zeros.filter(z => !isNaN(z));
+    } catch (err) {
+      console.error("Error fetching zeros:", err);
+      return [];
+    }
+  }
+
+
   async function runPython() {
     if (!pyodideReady) {
       alert("Loading Python... please wait.");
@@ -175,6 +192,9 @@
     let tMin = parseFloat(document.getElementById("t_min").value);
     let tRange = parseFloat(document.getElementById("t_range").value);
     let tMax = tMin + tRange;
+    const zeros = await fetchZeros(tMin, 30);
+    await pyodide.globals.set("js_zeros", zeros);
+
 
     const sigmaA = parseFloat(document.getElementById("sigma_a").value);
     const sigmaB = parseFloat(document.getElementById("sigma_b").value);
@@ -248,7 +268,7 @@
         primes = generate_n_primes(int(${numPrimes}))
         t = np.linspace(int(${tMin}), int(${tMax}), 5000)
 
-        zeros = get_riemann_zeros(limit=30, t_min=int(${tMin}))
+        zeros = js_zeros
         for z in zeros:
             ax.axvline(x=z, color="cyan", linestyle="--", linewidth=0.8, alpha=0.6)
 
