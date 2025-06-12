@@ -83,7 +83,7 @@
     <em>Flamandzki Harmonic Operator – <a href="https://millenniumchecked.org" style="color:#6cf;">millenniumchecked.org</a></em>
     <br><em>Note:</em> For performance reasons, only up to <strong>10,000 primes</strong> are allowed in this demo.
   </div>
-  
+
   <div class="container">
     <h2>🔬 Harmonic Interference Operator – RH Analysis</h2>
     <p>This interface computes the harmonic signal from primes using variable σ to detect destructive interference along the critical line ℜ(s) = 0.5.</p>
@@ -99,7 +99,7 @@
       </div>
       <div class="input-row">
         <label>Min t value: <input type="number" id="t_min" value="10" min="1" max="5000"></label>
-        <label>Max t value: <input type="number" id="t_max" value="30" min="1" max="5000"></label>
+        <label>t range: <input type="number" id="t_range" value="20" min="1" max="5000"></label>
       </div>
       <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4" min="0.1" max="1"></label>
       <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6" min="0.1" max="1"></label>
@@ -134,89 +134,88 @@
   </div>
 
   <script>
-    let pyodideReady = false;
-    let lastCSV = "";
-    let lastImageURL = "";
+  let pyodideReady = false;
+  let lastCSV = "";
+  let lastImageURL = "";
 
-    window.onload = () => {
-      const canvas = document.getElementById("plot");
-      const ctx = canvas.getContext("2d");
-      const img = new Image();
-      img.onload = function () {
-        const containerWidth = document.querySelector(".container").clientWidth;
-        const scale = containerWidth / img.width;
-        canvas.width = containerWidth;
-        canvas.height = img.height * scale;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      };
-      img.src = "HR education.png";
+  window.onload = () => {
+    const canvas = document.getElementById("plot");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = function () {
+      const containerWidth = document.querySelector(".container").clientWidth;
+      const scale = containerWidth / img.width;
+      canvas.width = containerWidth;
+      canvas.height = img.height * scale;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     };
+    img.src = "HR education.png";
+  };
 
-    async function loadPyodideAndPackages() {
-      window.pyodide = await loadPyodide();
-      await pyodide.loadPackage(["matplotlib", "sympy", "numpy"]);
-      pyodideReady = true;
+  async function loadPyodideAndPackages() {
+    window.pyodide = await loadPyodide();
+    await pyodide.loadPackage(["matplotlib", "sympy", "numpy", "micropip"]);
+    await pyodide.runPythonAsync("import micropip; await micropip.install('beautifulsoup4')");
+    pyodideReady = true;
+  }
+  loadPyodideAndPackages();
+
+  async function runPython() {
+    if (!pyodideReady) {
+      alert("Loading Python... please wait.");
+      return;
     }
-    loadPyodideAndPackages();
 
-    async function runPython() {
-      if (!pyodideReady) {
-        alert("Loading Python... please wait.");
-        return;
-      }
+    const numPrimes = parseInt(document.getElementById("num_primes").value);
+    if (numPrimes > 10000) { 
+      document.getElementById("num_primes").value = 10000
+      numPrimes = 10000
+    }
+    const mode = document.getElementById("modeSelector").value;
+    let tMin = parseFloat(document.getElementById("t_min").value);
+    let tRange = parseFloat(document.getElementById("t_range").value);
+    let tMax = tMin + tRange;
 
-      const numPrimes = parseInt(document.getElementById("num_primes").value);
-      if (numPrimes > 10000) { 
-        document.getElementById("num_primes").value = 10000
-        numPrimes = 10000
-      }
-      const mode = document.getElementById("modeSelector").value;
-      let tMin = parseFloat(document.getElementById("t_min").value);
-      let tMax = parseFloat(document.getElementById("t_max").value);
-      
-      
-      const sigmaA = parseFloat(document.getElementById("sigma_a").value);
-      const sigmaB = parseFloat(document.getElementById("sigma_b").value);
-      const dpi = document.getElementById("dpiSlider").value;
+    const sigmaA = parseFloat(document.getElementById("sigma_a").value);
+    const sigmaB = parseFloat(document.getElementById("sigma_b").value);
+    const dpi = document.getElementById("dpiSlider").value;
 
-      const outputText = document.getElementById("output-text");
-      const exportSection = document.getElementById("export-section");
+    const outputText = document.getElementById("output-text");
+    const exportSection = document.getElementById("export-section");
 
-      outputText.textContent = "Computing, please wait...\n";
-      
-      if (mode === "auto") {
-        const gamma = parseFloat(document.getElementById("gammaSlider").value);
-        const primesLogSum = await pyodide.runPythonAsync(`
-          from sympy import primerange
-          import numpy as np
-          primes = list(primerange(1, ${numPrimes + 1}))
-          log_sum = sum(np.log(p) for p in primes)
-          log_max = np.log(primes[-1])
-          log_sum / log_max
-        `);
-        const R = parseFloat(primesLogSum);
-        tMax = ((1.5 - gamma) * numPrimes) / R;
-        document.getElementById("t_max").value = Math.floor(tMax);
-        document.getElementById("output-text").textContent += "AUTO mode: computed t = " + Math.floor(tMax);
-      }
-      
-      exportSection.style.display = "none";
+    outputText.textContent = "Computing, please wait...\n";
 
-      const code = `
+    const code = `
         import matplotlib.pyplot as plt
         import numpy as np
         from sympy import primerange
-        
+        import requests
+        from bs4 import BeautifulSoup
+
+        def get_riemann_zeros(limit=30, t_min=None):
+            url = "https://www.lmfdb.org/zeros/zeta/list"
+            params = {"limit": limit, "N": "", "t": t_min if t_min is not None else ""}
+            try:
+                r = requests.get(url, params=params, timeout=10)
+                r.raise_for_status()
+                soup = BeautifulSoup(r.text, "html.parser")
+                return [
+                    float(row.find_all("td")[1].text.strip())
+                    for row in soup.select("table.table tbody tr")
+                ]
+            except Exception as e:
+                return []
+
         sigma_a = float(${sigmaA})
         sigma_b = float(${sigmaB})
         base_sigma = 0.5
-        
+
         sigmas = list(dict.fromkeys(
             [base_sigma] +
             ([] if sigma_a == base_sigma else [sigma_a]) +
             ([] if sigma_b == base_sigma or sigma_b == sigma_a else [sigma_b])
         ))
-        
+
         labels = {}
         for s in sigmas:
             if s == base_sigma:
@@ -227,14 +226,14 @@
                 labels[s] = f"σ = {s} (B)"
             else:
                 labels[s] = f"σ = {s}"
-        
+
         fig, ax = plt.subplots()
         output = ""
         csv_data = "label,sigma,avg_minima,deepest_minima,interpretation\\n"
-        
+
         def generate_n_primes(n):
             if n > 10000:
-              n = 10000  # No one survives beyond this line
+              n = 10000
             primes = []
             candidate = 2
             while len(primes) < n:
@@ -245,18 +244,22 @@
                     primes.append(candidate)
                 candidate += 1
             return primes
-        
+
         primes = generate_n_primes(int(${numPrimes}))
         t = np.linspace(int(${tMin}), int(${tMax}), 5000)
 
+        zeros = get_riemann_zeros(limit=30, t_min=int(${tMin}))
+        for z in zeros:
+            ax.axvline(x=z, color="cyan", linestyle="--", linewidth=0.8, alpha=0.6)
+
         colors = {
-            base_sigma: "#228B22"  # ForestGreen
+            base_sigma: "#228B22"
         }
         if sigma_a != base_sigma:
-            colors[sigma_a] = "#DC143C"  # Crimson
+            colors[sigma_a] = "#DC143C"
         if sigma_b != base_sigma and sigma_b != sigma_a:
-            colors[sigma_b] = "#FF8C00"  # DarkOrange
-        
+            colors[sigma_b] = "#FF8C00"
+
         for sigma in sigmas:
             signal = sum((1 / p**sigma) * np.cos(t * np.log(p)) for p in primes)
             style = {
@@ -266,7 +269,7 @@
                 "linewidth": 1.0 if sigma == base_sigma else 1.2,
                 "linestyle": "--" if sigma == base_sigma else "-"
             }
-        
+
             ax.plot(t, signal, **style)
             minima = [signal[i] for i in range(1, len(signal)-1) if signal[i]<signal[i-1] and signal[i]<signal[i+1]]
             avg_min = np.mean(minima) if minima else None
@@ -280,7 +283,7 @@
             output += "  • Avg minima: {:.4f}\\n".format(avg_min) if avg_min else "  • No minima detected\\n"
             output += f"  • Interpretation: {interp}\\n\\n"
             csv_data += f"{labels[sigma]},{sigma:.4f},{min_val:.4f},{interp}\\n"
-        
+
         ax.set_facecolor("black")
         fig.patch.set_facecolor("black")
         ax.set_title("Harmonic Signal Interference", color="white")
@@ -291,135 +294,34 @@
         plt.tight_layout()
         plt.savefig("plot.png", dpi=int(${dpi}))
         csv_data + "###" + output
-      `;
+    `;
 
-      try {
-        const result = await pyodide.runPythonAsync(code);
-        const [csv, outputTextResult] = result.split("###");
-        lastCSV = csv;
-        outputText.textContent = outputTextResult;
+    try {
+      const result = await pyodide.runPythonAsync(code);
+      const [csv, outputTextResult] = result.split("###");
+      lastCSV = csv;
+      outputText.textContent = outputTextResult;
 
-        const bytes = await pyodide.FS.readFile("plot.png");
-        const blob = new Blob([bytes], { type: "image/png" });
-        lastImageURL = URL.createObjectURL(blob);
-        const canvas = document.getElementById("plot");
-        const ctx = canvas.getContext("2d");
-        const img = new Image();
-        img.onload = function () {
-          const containerWidth = document.querySelector(".container").clientWidth;
-          const scale = containerWidth / img.width;
-          canvas.width = containerWidth;
-          canvas.height = img.height * scale;
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        };
-        img.src = lastImageURL;
-        document.getElementById("export-section").style.display = "block";
-      } catch (err) {
-        outputText.textContent = "Error during computation:\n" + err;
-        console.error(err);
-      }
+      const bytes = await pyodide.FS.readFile("plot.png");
+      const blob = new Blob([bytes], { type: "image/png" });
+      lastImageURL = URL.createObjectURL(blob);
+      const canvas = document.getElementById("plot");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.onload = function () {
+        const containerWidth = document.querySelector(".container").clientWidth;
+        const scale = containerWidth / img.width;
+        canvas.width = containerWidth;
+        canvas.height = img.height * scale;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = lastImageURL;
+      document.getElementById("export-section").style.display = "block";
+    } catch (err) {
+      outputText.textContent = "Error during computation:\n" + err;
+      console.error(err);
     }
-
-    function generateFileName(ext) {
-      const sigmaA = document.getElementById("sigma_a").value;
-      const sigmaB = document.getElementById("sigma_b").value;
-      const numPrimes = document.getElementById("num_primes").value;
-      const tMax = document.getElementById("t_max").value;
-      return `interference_${numPrimes}p_t${tMax}_a${sigmaA}_b${sigmaB}.${ext}`;
-    }
-
-    function downloadCSV() {
-      const blob = new Blob([lastCSV], { type: "text/csv" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = generateFileName("csv");
-      link.click();
-    }
-
-    function downloadPNG() {
-      const link = document.createElement("a");
-      link.href = lastImageURL;
-      link.download = generateFileName("png");
-      link.click();
-    }
-
-    async function downloadPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-
-  // STRONA 1: pełnoekranowa grafika
-  const img = new Image();
-  img.src = lastImageURL;
-  await img.decode();
-
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const aspectRatio = img.width / img.height;
-  let imgWidth = pageWidth;
-  let imgHeight = pageWidth / aspectRatio;
-
-  if (imgHeight > pageHeight) {
-    imgHeight = pageHeight;
-    imgWidth = pageHeight * aspectRatio;
   }
-
-  const x = (pageWidth - imgWidth) / 2;
-  const y = (pageHeight - imgHeight) / 2;
-
-  doc.addImage(img, "PNG", x, y, imgWidth, imgHeight);
-
-  // STRONA 2: dane + licencja
-  doc.addPage("landscape");
-  doc.setFontSize(14);
-  doc.text("Harmonic Interference Report – Riemann Hypothesis", 10, 15);
-  doc.setFontSize(10);
-  doc.text("Behavior of prime harmonic interference near the critical line ℜ(s) = 0.5.", 10, 22);
-
-  // Dodaj datę
-  const today = new Date();
-  const formattedDate = today.toISOString().slice(0, 10); // yyyy-mm-dd
-  doc.text(`Generated on: ${formattedDate}`, 10, 29);
-
-  let yPos = 35;
-  const rows = lastCSV.trim().split("\n").slice(1); // bez nagłówka
-
-  doc.setFontSize(9);
-  rows.forEach(row => {
-    if (yPos > 190) {
-      doc.addPage("landscape");
-      yPos = 15;
-    }
-    doc.text(row, 10, yPos);
-    yPos += 6;
-  });
-
-  // Licencja na dole
-  yPos += 10;
-  if (yPos > 190) {
-    doc.addPage("landscape");
-    yPos = 15;
-  }
-  doc.setFontSize(8);
-  doc.text("© Flamandzki Artur – Harmonic Operator", 10, yPos);
-  doc.text("Source: millenniumchecked.org", 10, yPos + 5);
-
-  doc.save("interference_report.pdf");
-}
-  
-function resetGraphic() {
-  const canvas = document.getElementById("plot");
-  const ctx = canvas.getContext("2d");
-  const img = new Image();
-  img.onload = function () {
-    const containerWidth = document.querySelector(".container").clientWidth;
-    const scale = containerWidth / img.width;
-    canvas.width = containerWidth;
-    canvas.height = img.height * scale;
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = "HR education.png";
-}
-
 </script>
 </body>
 </html>
