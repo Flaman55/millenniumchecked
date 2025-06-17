@@ -207,7 +207,7 @@ def detect_destructive_minima(t_values, amplitudes_dict, sigma_base=0.5, eps=0.0
         if a_0 < amplitudes_dict[s0][i - 1] and a_0 < amplitudes_dict[s0][i + 1]:
             if all(a_0 < amplitudes_dict[s][i] for s in alt_sigmas):
                 if a_0 < threshold:
-                    phases = [-(t0 * np.log(p)) % (2 * np.pi) for p in primes]
+                    phases = [-(t * np.log(p)) % (2 * np.pi) for p in primes]
                     spread = np.std(phases)
 
                     results.append((t, a_0, "Destructive Interference"))
@@ -250,6 +250,7 @@ t = np.linspace(int(${tMin}), int(${tMax}), 5000)
 colors = {
     base_sigma: "#228B22"  # ForestGreen
 }
+
 if sigma_a != base_sigma:
     colors[sigma_a] = "#DC143C"  # Crimson
 if sigma_b != base_sigma and sigma_b != sigma_a:
@@ -258,7 +259,9 @@ if sigma_b != base_sigma and sigma_b != sigma_a:
 naturalne = False
 t_values = np.arange(int(${tMin}), int(${tMax}), 0.01)
 
+amplitudes_dict = {}
 for sigma in sigmas:
+  amplitudes_dict[sigma] = s_primes
   s_primes = np.array([sum(p**(-sigma) * np.cos(ti * np.log(p)) for p in primes) for ti in t_values])
 
   if naturalne:
@@ -275,6 +278,9 @@ for sigma in sigmas:
   ax.plot(t_values, s_primes, label=f"σ = {sigma} (primes)", color=style["color"])
   if naturalne:
       ax.plot(t_values, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
+
+  for t, val, label, spread in destructive_results:
+    ax.plot(t, val, 'o', color='cyan', markersize=4, alpha=0.8)
 
   minima = [
       (t_values[i], s_primes[i])
