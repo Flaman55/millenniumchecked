@@ -309,7 +309,7 @@ for sigma in sigmas:
   csv_data += f"{labels[sigma]},{sigma:.4f},{min_val_str},{interp}\\n"
 
 # Wykrywanie interferencji destruktywnej
-destructive_results = detect_destructive_minima(t_values, amplitudes_dict, base_sigma)
+destructive_results = detect_destructive_minima(t_values, amplitudes_dict)
 
 # Formatowanie wyników dla summary
 summary_lines = []
