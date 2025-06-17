@@ -279,9 +279,6 @@ for sigma in sigmas:
   if naturalne:
       ax.plot(t_values, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
 
-  for t, val, label, spread in destructive_results:
-    ax.plot(t, val, 'o', color='cyan', markersize=4, alpha=0.8)
-
   minima = [
       (t_values[i], s_primes[i])
       for i in range(1, len(s_primes) - 1)
@@ -320,6 +317,8 @@ summary_lines.append("<hr><b>Detekcja Interferencji Destruktywnej:</b><br>")
 for t, val, label, spread in destructive_results:
     summary_lines.append(f"t = {t:.3f}, A = {val:.3f}, typ: {label}, spread faz = {spread:.3f}")
 
+for t, val, label, spread in destructive_results:
+    ax.plot(t, val, 'o', color='cyan', markersize=4, alpha=0.8)
 
 zeros = js_zeros
 for z in zeros:
