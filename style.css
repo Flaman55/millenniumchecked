@@ -167,12 +167,6 @@ nav a {
   color: #0ff;
 }
 
-#output, #output-text, #app, .app-container {
-  height: auto !important;
-  max-height: none !important;
-  overflow-y: visible !important;
-}
-
 /* PDF titles */
 .pdf-title {
   margin: 1em 0 0.5em;
@@ -182,7 +176,7 @@ nav a {
 /* Iframes */
 iframe {
   width: 100%;
-  height: 1600px;
+  height: 1800px;
   border: none;
   background-color: #222;
 }
