@@ -261,8 +261,8 @@ t_values = np.arange(int(${tMin}), int(${tMax}), 0.01)
 
 amplitudes_dict = {}
 for sigma in sigmas:
-  amplitudes_dict[sigma] = s_primes
   s_primes = np.array([sum(p**(-sigma) * np.cos(ti * np.log(p)) for p in primes) for ti in t_values])
+  amplitudes_dict[sigma] = s_primes
 
   if naturalne:
       s_nat = np.array([sum(n**(-sigma) * np.cos(ti * np.log(n)) for n in range(2, max_n+1)) for ti in t_values])
