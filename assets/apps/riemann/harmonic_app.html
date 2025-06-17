@@ -210,16 +210,16 @@ def detect_destructive_minima(t_values, amplitudes_dict, sigma_base=0.5, eps=0.0
         a_0 = amplitudes_dict[s0][i]
         if a_0 < amplitudes_dict[s0][i - 1] and a_0 < amplitudes_dict[s0][i + 1]:
             if all(a_0 < amplitudes_dict[s][i] for s in alt_sigmas):
+                phases = [-(t * np.log(p)) % (2 * np.pi) for p in primes]
+                spread = np.std(phases)
                 if a_0 < threshold:
-                    phases = [-(t * np.log(p)) % (2 * np.pi) for p in primes]
-                    spread = np.std(phases)
-
-                    results.append((t, a_0, "Destructive Interference"))
+                    results.append((t, a_0, "Destructive Interference", spread))
                 else:
-                    results.append((t, a_0, "Shallow Interference (not classified)"))
+                    results.append((t, a_0, "Shallow Interference (not classified)", spread))
             else:
-                results.append((t, a_0, "Non-unique minimum (phase artifact)"))
+                results.append((t, a_0, "Non-unique minimum (phase artifact)", None))
     return results
+
 
 sigmas = list(dict.fromkeys(
     [base_sigma] +
