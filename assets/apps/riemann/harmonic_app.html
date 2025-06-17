@@ -312,6 +312,7 @@ for sigma in sigmas:
 destructive_results = detect_destructive_minima(t_values, amplitudes_dict, base_sigma)
 
 # Formatowanie wyników dla summary
+summary_lines = []
 summary_lines.append("<hr><b>Detekcja Interferencji Destruktywnej:</b><br>")
 for t, val, label, spread in destructive_results:
     summary_lines.append(f"t = {t:.3f}, A = {val:.3f}, typ: {label}, spread faz = {spread:.3f}")
