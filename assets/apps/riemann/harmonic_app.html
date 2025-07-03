@@ -104,6 +104,7 @@
       <label>Sigma A: <input type="number" step="0.01" id="sigma_a" value="0.4" min="0.1" max="1"></label>
       <label>Sigma B: <input type="number" step="0.01" id="sigma_b" value="0.6" min="0.1" max="1"></label>
       <button onclick="runPython()">Generate Plot</button>
+      <button onclick="toggleNaturals()">Toggle Naturals: On</button>
       <button onclick="resetGraphic()">Reset to Default Graphic</button>
     </div>
 
@@ -191,6 +192,13 @@
       
       exportSection.style.display = "none";
 
+      function toggleNaturals() {
+        showNaturals = !showNaturals;
+        const btn = document.querySelector("button[onclick='toggleNaturals()']");
+        btn.textContent = "Toggle Naturals: " + (showNaturals ? "On" : "Off");
+      }
+      await pyodide.globals.set("js_showNaturals", showNaturals);
+
       const code = `
 import matplotlib.pyplot as plt
 import numpy as np
@@ -199,6 +207,7 @@ from sympy import primerange
 sigma_a = float(${sigmaA})
 sigma_b = float(${sigmaB})
 base_sigma = 0.5
+show_naturals = bool(${showNaturals})
 
 def detect_destructive_minima(t_values, amplitudes_dict, sigma_base=0.5, eps=0.05, threshold=-1.5):
     results = []
@@ -263,8 +272,9 @@ for sigma in sigmas:
   s_primes = np.array([sum(p**(-sigma) * np.cos(ti * np.log(p)) for p in primes) for ti in t_values])
   amplitudes_dict[sigma] = s_primes
 
-  if naturalne:
-      s_nat = np.array([sum(n**(-sigma) * np.cos(ti * np.log(n)) for n in range(2, max_n+1)) for ti in t_values])
+  if show_naturals:
+    s_nat = np.array([sum(n**(-sigma) * np.cos(ti * np.log(n)) for n in range(2, max_n+1)) for ti in t_values])
+    ax.plot(t_values, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
 
   style = {
       "label": labels[sigma],
@@ -275,8 +285,6 @@ for sigma in sigmas:
   }
 
   ax.plot(t_values, s_primes, label=style["label"], color=style["color"])
-  if naturalne:
-      ax.plot(t_values, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
 
   minima = [
       (t_values[i], s_primes[i])
