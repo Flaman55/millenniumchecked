@@ -274,7 +274,7 @@ for sigma in sigmas:
       "linestyle": "--" if sigma == base_sigma else "-"
   }
 
-  ax.plot(t_values, s_primes, label=f"σ = {sigma} (primes)", color=style["color"])
+  ax.plot(t_values, s_primes, label=style["label"], color=style["color"])
   if naturalne:
       ax.plot(t_values, s_nat, linestyle='--', label=f"σ = {sigma} (N≤{max_n})", alpha=0.5)
 
