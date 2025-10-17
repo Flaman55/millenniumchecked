@@ -6,6 +6,7 @@
   <meta name="description" content="Artur Flamandzki presents a unified harmonic framework addressing the Riemann Hypothesis and other Millennium Problems. Discover the MillenniumChecked approach to prime number theory and mathematical resonance.">
   <link rel="stylesheet" href="../sticky-style.css">
   <link rel="stylesheet" href="../style.css">
+  <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <div id="top-page"></div>  
@@ -99,39 +100,47 @@
 
         
           <h3>⚙️ How the Harmonic Operator Works</h3>
-          <p>
-            The harmonic operator is a mathematical construction built from prime numbers. Each prime contributes a wave, and these waves are summed into a single signal:
-          </p>
-        
-          <p style="text-align: center;">
-            <img src="../assets/Harmonic operator.png" alt="Harmonic Operator Formula" style="max-width: 150px; width: 90%; border: 1px solid #333; margin: 1em auto; display: block;">
-          </p>
-        
-          <p><strong>Where:</strong></p>
-          <ul>
-            <li><code>p</code> is a prime number</li>
-            <li><code>s = σ + it</code> is a complex variable</li>
-            <li>Each term <code>(1 / √p) ⋅ e<sup>−it log p</sup></code> is a wave of frequency <code>log p</code> and amplitude <code>1/√p</code></li>
-          </ul>
-        
-          <p>The full operator is a sum of all such waves. We don’t need to extend to infinity — the effect is visible after just a few hundred or thousand primes.</p>
-        
-          <h3>🔬 Why it works</h3>
-          <p>
-            The harmonic operator does not replicate the zeta function itself but models the structural reason for its critical behavior. 
-            The rhythm of primes generates a <strong>pattern of interference</strong> whose amplitude reaches equilibrium at σ = 0.5, 
-            revealing why this value marks the point of maximal symmetry within the system.
-          </p>
+            <p>
+              The harmonic operator is a mathematical construction built from prime numbers. 
+              Each prime contributes a wave, and these waves are summed into a single signal:
+            </p>
+            
+            <p style="text-align: center;">
+              \( H(s) = \sum_{p} p^{-\sigma} e^{-it \log p} = \sum_{p} p^{-s} \)
+            </p>
+            
+            <p><strong>Where:</strong></p>
+            <ul>
+              <li><code>p</code> is a prime number</li>
+              <li><code>s = σ + it</code> is a complex variable</li>
+              <li>Each term <code>p<sup>−σ</sup> ⋅ e<sup>−it log p</sup></code> is a wave of frequency <code>log p</code> 
+                  and amplitude <code>p<sup>−σ</sup></code></li>
+            </ul>
+            
+            <p>
+              The full operator is a sum of all such waves. 
+              Even with a few hundred or thousand primes, the interference pattern stabilizes — revealing the underlying structure.
+            </p>
+            
+            <h3>🔬 Why It Works</h3>
+            <p>
+              The harmonic operator does not reproduce the zeta function itself but models 
+              the <strong>structural mechanism behind its critical behavior</strong>. 
+              The rhythm of primes generates a <strong>pattern of interference</strong> 
+              whose amplitude reaches equilibrium near \(σ = \tfrac{1}{2}\). 
+              At this point, the contributions of all primes are symmetrically balanced between damping and amplification.
+            </p>
+            
+            <ul>
+              <li>For \(σ ≠ \tfrac{1}{2}\), weights are asymmetric → interference is incomplete.</li>
+              <li>For \(σ = \tfrac{1}{2}\), symmetry is exact → amplitude reaches a minimal equilibrium.</li>
+            </ul>
+            
+            <p>
+              This is not a symbolic restatement but a constructive outcome — 
+              a structural equilibrium that can be <em>built, visualized, and tested</em> directly within the framework.
+            </p>
 
-        
-          <ul>
-            <li>For σ ≠ 0.5, weights are distorted → interference is incomplete</li>
-            <li>For σ = 0.5, the balance is exact → amplitude drops to near-zero</li>
-          </ul>
-        
-          <p>
-            This is not presented as a symbolic statement but as a structural outcome — something that can be explored, constructed, and examined within this framework.
-          </p>
 
         
           <div style="display: flex; gap: 2%; justify-content: center; margin: 2em 0; flex-wrap: wrap;">
